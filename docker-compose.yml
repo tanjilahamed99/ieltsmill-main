@@ -5,14 +5,14 @@ services:
     build: ./backend
     container_name: ieltsmill-backend
     ports:
-      - "6000:6000"
+      - "5050:6000"
     restart: always
  
   frontend:
     build: ./frontend
     container_name: ieltsmill-frontend
     ports:
-      - "3000:3000"
+      - "120:3000"
     depends_on:
       - backend
     restart: always
