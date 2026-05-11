@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+   /* bg-linear-to-r from-primary to-secondary */
+
+@theme {
+  --color-primary: #ef4444;
+  --color-secondary: #f97316;
+  --color-text: #111827;
+  --color-muted: #6b7280;
+  --color-surface: #f9fafb;
+  --color-border: #e5e7eb;
+  --color-dark: #0f172a;
+  --color-grad: linear-gradient(135deg, #ef4444, #f97316);
+  --color-grad-purple: linear-gradient(135deg, #4f46e5, #7c3aed, #db2777);
+  --color-grad-green: linear-gradient(135deg, #10b981, #059669);
+}
+
+@layer utilities {
+  .bg-grad {
+    background: var(--color-grad);
+  }
+  .bg-grad-purple {
+    background: var(--color-grad-purple);
+  }
+  .bg-grad-green {
+    background: var(--color-grad-green);
+  }
+}
