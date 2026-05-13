@@ -1,119 +1,15 @@
 "use client";
 
-// pages/self-practice/index.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import Navbar from "../../components/Navbar/Navbar";
 import { selfPracticeList } from "../../action/student";
 const Footer = dynamic(() => import("../../components/Footer/Footer"));
 
-// Mock API fetch — replace with your real fetch
-const fetchPractices = async (type) => {
-  const { data: reading } = await selfPracticeList("reading", 1);
-  const { data: writing } = await selfPracticeList("writing", 1);
-
-  // const reading = [
-  //   {
-  //     id: "1",
-  //     title: "Climate Change & Global Impact",
-  //     level: "Academic",
-  //     time: 20,
-  //     questions: 13,
-  //     category: "Environment",
-  //   },
-  //   {
-  //     id: "2",
-  //     title: "The History of the Internet",
-  //     level: "General",
-  //     time: 20,
-  //     questions: 14,
-  //     category: "Technology",
-  //   },
-  //   {
-  //     id: "3",
-  //     title: "Urban Migration Patterns",
-  //     level: "Academic",
-  //     time: 20,
-  //     questions: 13,
-  //     category: "Society",
-  //   },
-  //   {
-  //     id: "4",
-  //     title: "Artificial Intelligence in Medicine",
-  //     level: "Academic",
-  //     time: 20,
-  //     questions: 14,
-  //     category: "Science",
-  //   },
-  //   {
-  //     id: "5",
-  //     title: "The Psychology of Habit Formation",
-  //     level: "General",
-  //     time: 20,
-  //     questions: 13,
-  //     category: "Psychology",
-  //   },
-  //   {
-  //     id: "6",
-  //     title: "Renewable Energy Sources",
-  //     level: "Academic",
-  //     time: 20,
-  //     questions: 14,
-  //     category: "Environment",
-  //   },
-  // ];
-  // const writing = [
-  //   {
-  //     id: "1",
-  //     title: "Bar Chart: Global Energy Consumption",
-  //     level: "Task 1",
-  //     time: 20,
-  //     words: 150,
-  //     category: "Charts",
-  //   },
-  //   {
-  //     id: "2",
-  //     title: "Discuss Both Views: Remote Work",
-  //     level: "Task 2",
-  //     time: 40,
-  //     words: 250,
-  //     category: "Opinion",
-  //   },
-  //   {
-  //     id: "3",
-  //     title: "Line Graph: Population Growth",
-  //     level: "Task 1",
-  //     time: 20,
-  //     words: 150,
-  //     category: "Graphs",
-  //   },
-  //   {
-  //     id: "4",
-  //     title: "Problem & Solution: Traffic Congestion",
-  //     level: "Task 2",
-  //     time: 40,
-  //     words: 250,
-  //     category: "Problem",
-  //   },
-  //   {
-  //     id: "5",
-  //     title: "Map Comparison: City Development",
-  //     level: "Task 1",
-  //     time: 20,
-  //     words: 150,
-  //     category: "Maps",
-  //   },
-  //   {
-  //     id: "6",
-  //     title: "Agree or Disagree: Technology in Education",
-  //     level: "Task 2",
-  //     time: 40,
-  //     words: 250,
-  //     category: "Opinion",
-  //   },
-  // ];
-  return type === "reading" ? reading : writing;
+const fetchPractices = async (type, page = 1) => {
+  const { data } = await selfPracticeList(type, page);
+  return data;
 };
 
 const LEVEL_COLORS = {
@@ -124,83 +20,39 @@ const LEVEL_COLORS = {
 };
 
 const BookIcon = () => (
-  <svg
-    width="28"
-    height="28"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.8"
-    strokeLinecap="round"
-    strokeLinejoin="round">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
   </svg>
 );
 
 const PenIcon = () => (
-  <svg
-    width="28"
-    height="28"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.8"
-    strokeLinecap="round"
-    strokeLinejoin="round">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
   </svg>
 );
 
 const ClockIcon = () => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="10" />
     <polyline points="12 6 12 12 16 14" />
   </svg>
 );
 
 const ChevronRight = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="9 18 15 12 9 6" />
   </svg>
 );
 
 function PracticeCard({ item, type }) {
-  const levelStyle = LEVEL_COLORS[item.level] || {
-    bg: "#F9FAFB",
-    text: "#374151",
-    border: "#E5E7EB",
-  };
+  const levelStyle = LEVEL_COLORS[item.level] || { bg: "#F9FAFB", text: "#374151", border: "#E5E7EB" };
   return (
-    <Link
-      href={`/self-practice/${type}/${item._id}`}
-      style={{ textDecoration: "none" }}>
+    <Link href={`/self-practice/${type}/${item._id}`} style={{ textDecoration: "none" }}>
       <div className="practice-card">
         <div className="card-top">
           <span className="category-badge">{item.category}</span>
-          <span
-            className="level-badge"
-            style={{
-              background: levelStyle.bg,
-              color: levelStyle.text,
-              border: `1px solid ${levelStyle.border}`,
-            }}>
+          <span className="level-badge" style={{ background: levelStyle.bg, color: levelStyle.text, border: `1px solid ${levelStyle.border}` }}>
             {item.level}
           </span>
         </div>
@@ -223,38 +75,108 @@ function PracticeCard({ item, type }) {
   );
 }
 
+// ─── Pagination Component ───────────────────────────────────────────────────
+
+function Pagination({ pagination, onPageChange }) {
+  const { page, pages, total, limit } = pagination;
+  if (pages <= 1) return null;
+
+  const from = (page - 1) * limit + 1;
+  const to = Math.min(page * limit, total);
+
+  // Build page number array with ellipsis
+  const getPageNumbers = () => {
+    const nums = [];
+    if (pages <= 7) {
+      for (let i = 1; i <= pages; i++) nums.push(i);
+    } else {
+      nums.push(1);
+      if (page > 3) nums.push("...");
+      for (let i = Math.max(2, page - 1); i <= Math.min(pages - 1, page + 1); i++) {
+        nums.push(i);
+      }
+      if (page < pages - 2) nums.push("...");
+      nums.push(pages);
+    }
+    return nums;
+  };
+
+  return (
+    <div className="pagination-wrap">
+      <span className="pagination-info">
+        Showing {from}–{to} of {total}
+      </span>
+      <div className="pagination-controls">
+        <button
+          className="page-btn"
+          onClick={() => onPageChange(page - 1)}
+          disabled={page === 1}
+          aria-label="Previous page"
+        >
+          ‹
+        </button>
+
+        {getPageNumbers().map((num, idx) =>
+          num === "..." ? (
+            <span key={`ellipsis-${idx}`} className="page-ellipsis">…</span>
+          ) : (
+            <button
+              key={num}
+              className={`page-btn ${num === page ? "page-btn--active" : ""}`}
+              onClick={() => onPageChange(num)}
+              aria-label={`Page ${num}`}
+              aria-current={num === page ? "page" : undefined}
+            >
+              {num}
+            </button>
+          )
+        )}
+
+        <button
+          className="page-btn"
+          onClick={() => onPageChange(page + 1)}
+          disabled={page === pages}
+          aria-label="Next page"
+        >
+          ›
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Practice Section ───────────────────────────────────────────────────────
+
 function PracticeSection({ type, icon, title, color, description }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState({ page: 1, limit: 20, total: 0, pages: 0 });
+
+  const loadPage = useCallback(async (pageNum) => {
+    setLoading(true);
+    window.scrollTo({ top: 0, behavior: "smooth" }); // optional UX touch
+    const data = await fetchPractices(type, pageNum);
+    setItems(data.data);
+    setPagination(data.pagination);
+    setLoading(false);
+  }, [type]);
 
   useEffect(() => {
-    const fetch = async () => {
-      const data = await fetchPractices(type);
-      setLoading(false);
-      setItems(data.data);
-    };
-    fetch();
-  }, [type]);
+    loadPage(1);
+  }, [loadPage]);
 
   return (
     <section className="practice-section">
       <div className="section-header">
         <div className="section-title-wrap">
-          <span
-            className="section-icon"
-            style={{ background: color + "18", color }}>
+          <span className="section-icon" style={{ background: color + "18", color }}>
             {icon}
           </span>
           <div>
-            <h2 className="section-title" style={{ color }}>
-              {title}
-            </h2>
+            <h2 className="section-title" style={{ color }}>{title}</h2>
             <p className="section-desc">{description}</p>
           </div>
         </div>
-        <Link href={`/self-practice/${type}`} className="view-all">
-          View all →
-        </Link>
       </div>
 
       {loading ? (
@@ -264,28 +186,31 @@ function PracticeSection({ type, icon, title, color, description }) {
           ))}
         </div>
       ) : (
-        <div className="cards-grid">
-          {items.map((item, idx) => (
-            <PracticeCard key={idx} item={item} type={type} />
-          ))}
-        </div>
+        <>
+          <div className="cards-grid">
+            {items.map((item, idx) => (
+              <PracticeCard key={idx} item={item} type={type} />
+            ))}
+          </div>
+          <Pagination pagination={pagination} onPageChange={loadPage} />
+        </>
       )}
     </section>
   );
 }
+
+// ─── Page ───────────────────────────────────────────────────────────────────
 
 const SelfPractice = () => {
   return (
     <div className="sp-root">
       <Navbar />
       <main className="sp-main">
-        {/* Hero */}
         <div className="sp-hero">
           <div className="hero-badge">IELTS Preparation</div>
           <h1 className="hero-title">Self Practice</h1>
           <p className="hero-subtitle">
-            Sharpen your IELTS skills with curated reading passages and writing
-            tasks.
+            Sharpen your IELTS skills with curated reading passages and writing tasks.
             <br />
             Track your progress and build exam confidence.
           </p>
@@ -390,7 +315,6 @@ const SelfPractice = () => {
 
         /* CONTENT */
         .sp-content { max-width: 1200px; margin: 0 auto; padding: 60px 24px 80px; }
-
         .practice-section { margin-bottom: 64px; }
 
         .section-header {
@@ -415,15 +339,6 @@ const SelfPractice = () => {
           margin: 0 0 4px;
         }
         .section-desc { color: #64748B; font-size: 14px; margin: 0; }
-        .view-all {
-          color: #1D4ED8;
-          font-size: 14px;
-          font-weight: 600;
-          text-decoration: none;
-          padding: 8px 0;
-          white-space: nowrap;
-        }
-        .view-all:hover { text-decoration: underline; }
 
         /* CARDS */
         .cards-grid {
@@ -431,7 +346,6 @@ const SelfPractice = () => {
           grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
           gap: 20px;
         }
-
         .practice-card {
           background: #fff;
           border: 1px solid #E2E8F0;
@@ -448,63 +362,93 @@ const SelfPractice = () => {
           box-shadow: 0 8px 30px rgba(29,78,216,0.12);
           transform: translateY(-2px);
         }
-
         .card-top { display: flex; align-items: center; justify-content: space-between; }
         .category-badge {
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.5px;
-          text-transform: uppercase;
-          color: #64748B;
-          background: #F1F5F9;
-          padding: 3px 10px;
-          border-radius: 100px;
+          font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+          text-transform: uppercase; color: #64748B;
+          background: #F1F5F9; padding: 3px 10px; border-radius: 100px;
         }
-        .level-badge {
-          font-size: 11px;
-          font-weight: 600;
-          padding: 3px 10px;
-          border-radius: 100px;
-        }
-
+        .level-badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px; }
         .card-title {
-          font-family: 'Lora', serif;
-          font-size: 16px;
-          font-weight: 600;
-          color: #0F172A;
-          margin: 0;
-          line-height: 1.4;
+          font-family: 'Lora', serif; font-size: 16px; font-weight: 600;
+          color: #0F172A; margin: 0; line-height: 1.4;
         }
-
         .card-meta { display: flex; gap: 16px; }
-        .meta-item {
+        .meta-item { display: flex; align-items: center; gap: 5px; font-size: 13px; color: #64748B; font-weight: 500; }
+        .card-footer { margin-top: auto; padding-top: 4px; border-top: 1px solid #F1F5F9; }
+        .start-btn { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: #1D4ED8; }
+
+        /* PAGINATION */
+        .pagination-wrap {
           display: flex;
           align-items: center;
-          gap: 5px;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin-top: 32px;
+          padding-top: 24px;
+          border-top: 1px solid #E2E8F0;
+        }
+        .pagination-info {
           font-size: 13px;
           color: #64748B;
           font-weight: 500;
         }
-
-        .card-footer { margin-top: auto; padding-top: 4px; border-top: 1px solid #F1F5F9; }
-        .start-btn {
+        .pagination-controls {
           display: flex;
           align-items: center;
           gap: 4px;
-          font-size: 13px;
-          font-weight: 600;
+        }
+        .page-btn {
+          min-width: 36px;
+          height: 36px;
+          padding: 0 10px;
+          border: 1px solid #E2E8F0;
+          border-radius: 8px;
+          background: #fff;
+          color: #374151;
+          font-size: 14px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.15s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'DM Sans', sans-serif;
+        }
+        .page-btn:hover:not(:disabled) {
+          border-color: #1D4ED8;
           color: #1D4ED8;
+          background: #EFF6FF;
+        }
+        .page-btn:disabled {
+          opacity: 0.38;
+          cursor: not-allowed;
+        }
+        .page-btn--active {
+          background: #1D4ED8;
+          border-color: #1D4ED8;
+          color: #fff !important;
+        }
+        .page-btn--active:hover {
+          background: #1E40AF !important;
+          border-color: #1E40AF !important;
+        }
+        .page-ellipsis {
+          font-size: 14px;
+          color: #94A3B8;
+          padding: 0 6px;
+          user-select: none;
         }
 
         /* SKELETON */
         .skeleton-card {
-          background: #fff;
           border: 1px solid #E2E8F0;
           border-radius: 16px;
           height: 160px;
-          animation: shimmer 1.5s infinite;
           background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
           background-size: 200% 100%;
+          animation: shimmer 1.5s infinite;
         }
         @keyframes shimmer {
           0% { background-position: 200% 0; }
@@ -519,6 +463,7 @@ const SelfPractice = () => {
           .cards-grid { grid-template-columns: 1fr; }
           .section-header { flex-direction: column; }
           .stat-num { font-size: 22px; }
+          .pagination-wrap { flex-direction: column; align-items: flex-start; }
         }
       `}</style>
     </div>

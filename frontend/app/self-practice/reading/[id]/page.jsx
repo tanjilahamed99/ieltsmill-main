@@ -322,8 +322,9 @@ export default function ReadingDetail() {
             </button>
           )}
 
-          {!timerActive ? (
+          {/* {!timerActive ? (
             <button
+              disabled
               className="timer-start-btn"
               onClick={() => setTimerActive(true)}>
               ▶ Start Timer
@@ -354,7 +355,7 @@ export default function ReadingDetail() {
               </svg>
               <span className="timer-label">{formatTime(timeLeft)}</span>
             </div>
-          )}
+          )} */}
         </div>
       </header>
 
@@ -368,6 +369,9 @@ export default function ReadingDetail() {
           </span>
           <span className="chip chip-tip">
             <MarkerIcon /> Select text to highlight
+          </span>
+          <span className="chip chip-tip">
+            <MarkerIcon /> Vocabulary
           </span>
           {highlights.length > 0 && (
             <span className="chip chip-hl">
@@ -493,7 +497,7 @@ export default function ReadingDetail() {
 
         /* ── MAIN ── */
         .rd-main {
-          max-width: 780px;
+          max-width: 1000px;
           margin: 0 auto;
           padding: 36px 24px 100px;
         }
