@@ -27,58 +27,32 @@ function buildSpans(text, highlights) {
 
 // ─── Icons ───────────────────────────────────────────────────────────────────
 const ChevronLeft = () => (
-  <svg
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="15 18 9 12 15 6" />
   </svg>
 );
 const ClockIcon = () => (
-  <svg
-    width="13"
-    height="13"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="10" />
     <polyline points="12 6 12 12 16 14" />
   </svg>
 );
 const MarkerIcon = () => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.2"
-    strokeLinecap="round"
-    strokeLinejoin="round">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
   </svg>
 );
 const EraserIcon = () => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.2"
-    strokeLinecap="round"
-    strokeLinejoin="round">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M20 20H7L3 16l11-11 6 6-2.5 2.5" />
     <path d="M6 14l4 4" />
+  </svg>
+);
+const BookIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
   </svg>
 );
 
@@ -120,9 +94,7 @@ function Passage({ text, highlights, onSelect }) {
       onTouchEnd={handlePointerUp}>
       {spans.map((s, i) =>
         s.highlighted ? (
-          <mark key={i} className="passage-mark">
-            {s.text}
-          </mark>
+          <mark key={i} className="passage-mark">{s.text}</mark>
         ) : (
           <span key={i}>{s.text}</span>
         ),
@@ -132,13 +104,7 @@ function Passage({ text, highlights, onSelect }) {
 }
 
 // ─── Floating popup ───────────────────────────────────────────────────────────
-function SelectionPopup({
-  selection,
-  isHighlighted,
-  onHighlight,
-  onClear,
-  onDismiss,
-}) {
+function SelectionPopup({ selection, isHighlighted, onHighlight, onClear, onDismiss }) {
   const ref = useRef(null);
   const [pos, setPos] = useState({ top: -999, left: -999, ready: false });
 
@@ -193,6 +159,44 @@ function SelectionPopup({
   );
 }
 
+// ─── Vocabulary Section ───────────────────────────────────────────────────────
+function VocabularySection({ vocabulary }) {
+  if (!vocabulary || !vocabulary.trim()) return null;
+
+  const entries = vocabulary
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  return (
+    <div className="vocab-section">
+      <div className="vocab-header">
+        <BookIcon />
+        <span>Vocabulary</span>
+        <span className="vocab-count">{entries.length} words</span>
+      </div>
+      <div className="vocab-grid">
+        {entries.map((entry, i) => {
+          const sepMatch = entry.match(/^(.+?)\s*[–\-:]\s*(.+)$/);
+          if (sepMatch) {
+            return (
+              <div key={i} className="vocab-item">
+                <span className="vocab-word">{sepMatch[1].trim()}</span>
+                <span className="vocab-def">{sepMatch[2].trim()}</span>
+              </div>
+            );
+          }
+          return (
+            <div key={i} className="vocab-item vocab-plain">
+              <span>{entry}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 // ─── Main page component ──────────────────────────────────────────────────────
 export default function ReadingDetail() {
   const params = useParams();
@@ -200,64 +204,33 @@ export default function ReadingDetail() {
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [highlights, setHighlights] = useState([]); // [{id, start, end}]
-  const [selection, setSelection] = useState(null); // {start, end, rect}
-  const [timeLeft, setTimeLeft] = useState(null);
-  const [timerActive, setTimerActive] = useState(false);
+  const [highlights, setHighlights] = useState([]);
+  const [selection, setSelection] = useState(null);
   const timerRef = useRef(null);
 
   useEffect(() => {
     if (!id) return;
-
     const fetch = async () => {
       const { data } = await selfPracticeById({ id, type: "reading" });
       if (data.success) {
         setData(data.data);
         setLoading(false);
-        setTimeLeft(data.data.time * 60);
       }
     };
     fetch();
   }, [id]);
 
-  useEffect(() => {
-    if (timerActive && timeLeft > 0) {
-      timerRef.current = setInterval(() => setTimeLeft((t) => t - 1), 1000);
-    } else {
-      clearInterval(timerRef.current);
-    }
-    return () => clearInterval(timerRef.current);
-  }, [timerActive]);
-
-  const formatTime = (s) => {
-    const m = Math.floor(s / 60)
-      .toString()
-      .padStart(2, "0");
-    const sec = (s % 60).toString().padStart(2, "0");
-    return `${m}:${sec}`;
-  };
-
-  // Check if current selection is already fully highlighted
   const isHighlighted = selection
-    ? highlights.some(
-        (h) => h.start <= selection.start && h.end >= selection.end,
-      )
+    ? highlights.some((h) => h.start <= selection.start && h.end >= selection.end)
     : false;
 
   const handleSelect = useCallback((sel) => setSelection(sel), []);
 
   const handleHighlight = () => {
     if (!selection) return;
-    const newH = {
-      id: Date.now().toString(),
-      start: selection.start,
-      end: selection.end,
-    };
+    const newH = { id: Date.now().toString(), start: selection.start, end: selection.end };
     setHighlights((prev) => {
-      // remove any that fully overlap, then add merged
-      const rest = prev.filter(
-        (h) => h.end <= newH.start || h.start >= newH.end,
-      );
+      const rest = prev.filter((h) => h.end <= newH.start || h.start >= newH.end);
       return [...rest, newH].sort((a, b) => a.start - b.start);
     });
     window.getSelection()?.removeAllRanges();
@@ -278,10 +251,6 @@ export default function ReadingDetail() {
     window.getSelection()?.removeAllRanges();
   };
 
-  const timePct =
-    timeLeft !== null && data ? (timeLeft / (data.time * 60)) * 100 : 100;
-  const urgent = timeLeft !== null && timeLeft < 60;
-
   if (loading) {
     return (
       <div className="rd-root">
@@ -296,8 +265,6 @@ export default function ReadingDetail() {
 
   return (
     <div className="rd-root">
-      {/* <Navbar /> */}
-
       {/* Top bar */}
       <header className="rd-topbar">
         <Link href="/self-practice" className="back-link">
@@ -313,49 +280,11 @@ export default function ReadingDetail() {
           {highlights.length > 0 && (
             <button
               className="clear-all-btn"
-              onClick={() => {
-                setHighlights([]);
-                setSelection(null);
-              }}>
+              onClick={() => { setHighlights([]); setSelection(null); }}>
               <EraserIcon /> Clear all
               <span className="clear-all-count">{highlights.length}</span>
             </button>
           )}
-
-          {/* {!timerActive ? (
-            <button
-              disabled
-              className="timer-start-btn"
-              onClick={() => setTimerActive(true)}>
-              ▶ Start Timer
-            </button>
-          ) : (
-            <div className={`rd-timer ${urgent ? "urgent" : ""}`}>
-              <svg className="timer-ring" viewBox="0 0 36 36">
-                <circle
-                  cx="18"
-                  cy="18"
-                  r="15.9"
-                  fill="none"
-                  stroke="#E2E8F0"
-                  strokeWidth="2.8"
-                />
-                <circle
-                  cx="18"
-                  cy="18"
-                  r="15.9"
-                  fill="none"
-                  stroke={urgent ? "#EF4444" : "#1D4ED8"}
-                  strokeWidth="2.8"
-                  strokeDasharray="100"
-                  strokeDashoffset={100 - timePct}
-                  strokeLinecap="round"
-                  transform="rotate(-90 18 18)"
-                />
-              </svg>
-              <span className="timer-label">{formatTime(timeLeft)}</span>
-            </div>
-          )} */}
         </div>
       </header>
 
@@ -370,13 +299,14 @@ export default function ReadingDetail() {
           <span className="chip chip-tip">
             <MarkerIcon /> Select text to highlight
           </span>
-          <span className="chip chip-tip">
-            <MarkerIcon /> Vocabulary
-          </span>
+          {data.vocabulary && (
+            <span className="chip chip-vocab">
+              <BookIcon /> Vocabulary included
+            </span>
+          )}
           {highlights.length > 0 && (
             <span className="chip chip-hl">
-              🖊 {highlights.length} highlight
-              {highlights.length !== 1 ? "s" : ""}
+              🖊 {highlights.length} highlight{highlights.length !== 1 ? "s" : ""}
             </span>
           )}
         </div>
@@ -391,6 +321,11 @@ export default function ReadingDetail() {
             onSelect={handleSelect}
           />
         </article>
+
+        {/* Vocabulary Section */}
+        {data.vocabulary && (
+          <VocabularySection vocabulary={data.vocabulary} />
+        )}
       </main>
 
       {/* Popup */}
@@ -403,8 +338,6 @@ export default function ReadingDetail() {
           onDismiss={dismiss}
         />
       )}
-
-      {/* <Footer /> */}
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap');
@@ -466,22 +399,6 @@ export default function ReadingDetail() {
           padding: 1px 7px; border-radius: 100px;
         }
 
-        .timer-start-btn {
-          background: #1D4ED8; color: #fff;
-          border: none; border-radius: 8px;
-          padding: 8px 16px; font-size: 13px; font-weight: 600;
-          cursor: pointer; white-space: nowrap; transition: background 0.15s;
-        }
-        .timer-start-btn:hover { background: #1E40AF; }
-
-        .rd-timer {
-          display: flex; align-items: center; gap: 8px;
-          font-size: 15px; font-weight: 700; color: #1D4ED8;
-        }
-        .rd-timer.urgent { color: #EF4444; }
-        .timer-ring { width: 36px; height: 36px; flex-shrink: 0; }
-        .timer-label { font-variant-numeric: tabular-nums; }
-
         /* ── LOADING ── */
         .rd-loading {
           display: flex; flex-direction: column; align-items: center;
@@ -495,11 +412,11 @@ export default function ReadingDetail() {
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ── MAIN ── */
+        /* ── MAIN — 80% width ── */
         .rd-main {
-          max-width: 1000px;
+          width: 80%;
           margin: 0 auto;
-          padding: 36px 24px 100px;
+          padding: 36px 0 100px;
         }
 
         /* ── CHIPS ── */
@@ -512,10 +429,11 @@ export default function ReadingDetail() {
           font-size: 12px; font-weight: 500;
           padding: 5px 12px; border-radius: 100px;
         }
-        .chip-cat  { background: #F1F5F9; color: #475569; }
-        .chip-time { background: #EFF6FF; color: #1D4ED8; border: 1px solid #DBEAFE; }
-        .chip-tip  { background: #FEFCE8; color: #854D0E; border: 1px solid #FDE68A; }
-        .chip-hl   { background: #FEF9C3; color: #713F12; border: 1px solid #FDE047; font-weight: 600; }
+        .chip-cat   { background: #F1F5F9; color: #475569; }
+        .chip-time  { background: #EFF6FF; color: #1D4ED8; border: 1px solid #DBEAFE; }
+        .chip-tip   { background: #FEFCE8; color: #854D0E; border: 1px solid #FDE68A; }
+        .chip-vocab { background: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; }
+        .chip-hl    { background: #FEF9C3; color: #713F12; border: 1px solid #FDE047; font-weight: 600; }
 
         /* ── PASSAGE CARD ── */
         .passage-card {
@@ -524,6 +442,7 @@ export default function ReadingDetail() {
           border-radius: 20px;
           padding: 48px 56px;
           box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+          margin-bottom: 28px;
         }
 
         .passage-title {
@@ -558,6 +477,61 @@ export default function ReadingDetail() {
         }
         .passage-mark:hover { background: #FDE047; }
 
+        /* ── VOCABULARY SECTION ── */
+        .vocab-section {
+          background: #ffffff;
+          border: 1px solid #BBF7D0;
+          border-radius: 20px;
+          overflow: hidden;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+          margin-bottom: 28px;
+        }
+
+        .vocab-header {
+          display: flex; align-items: center; gap: 8px;
+          background: #F0FDF4;
+          border-bottom: 1px solid #BBF7D0;
+          padding: 14px 28px;
+          font-size: 14px; font-weight: 700; color: #166534;
+        }
+
+        .vocab-count {
+          margin-left: auto;
+          background: #BBF7D0; color: #166534;
+          font-size: 11px; font-weight: 700;
+          padding: 2px 10px; border-radius: 100px;
+        }
+
+        .vocab-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0;
+        }
+
+        .vocab-item {
+          display: flex; flex-direction: column; gap: 4px;
+          padding: 16px 28px;
+          border-bottom: 1px solid #F1F5F9;
+          border-right: 1px solid #F1F5F9;
+        }
+        .vocab-item:nth-child(2n) { border-right: none; }
+        .vocab-item:nth-last-child(-n+2) { border-bottom: none; }
+
+        .vocab-word {
+          font-family: 'Lora', serif;
+          font-size: 15px; font-weight: 700;
+          color: #0F172A;
+        }
+
+        .vocab-def {
+          font-size: 13px; line-height: 1.6;
+          color: #475569;
+        }
+
+        .vocab-plain {
+          font-size: 14px; color: #334155;
+        }
+
         /* ── SELECTION POPUP ── */
         .sel-popup {
           position: absolute;
@@ -571,7 +545,6 @@ export default function ReadingDetail() {
           transition: opacity 0.12s ease;
         }
 
-        /* tiny caret below popup (CSS only) */
         .sel-popup::after {
           content: '';
           position: absolute;
@@ -596,21 +569,6 @@ export default function ReadingDetail() {
 
         .highlight-btn { background: #FEF08A; color: #713F12; }
         .clear-btn     { background: #FEE2E2; color: #991B1B; }
-
-        /* ── RESPONSIVE ── */
-        @media (max-width: 720px) {
-          .passage-card { padding: 30px 24px; }
-          .passage-title { font-size: 22px; }
-          .passage-body { font-size: 16px; line-height: 1.9; }
-          .rd-heading-label { display: none; }
-        }
-        @media (max-width: 480px) {
-          .rd-topbar { padding: 10px 14px; }
-          .rd-main { padding: 20px 12px 80px; }
-          .passage-card { padding: 22px 16px; border-radius: 14px; }
-          .rd-meta { display: none; }
-          .passage-title { font-size: 19px; }
-        }
       `}</style>
     </div>
   );
