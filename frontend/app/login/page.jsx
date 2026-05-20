@@ -144,7 +144,7 @@ const AuthPage = () => {
         {/* Logo/Brand */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
-            ILTSMILL
+            IELTSMILL
           </h1>
           <p className="text-muted mt-2">Master Your IELTS Journey</p>
         </div>

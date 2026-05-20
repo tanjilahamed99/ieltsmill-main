@@ -264,7 +264,7 @@ const SeriesThumbnail = ({ num }) => (
     className="w-14 h-14 rounded-xl shrink-0 flex flex-col items-center justify-center text-white font-bold"
     style={{ background: "linear-gradient(135deg,#7f0000,#C8102E)" }}>
     <span className="text-[7px] opacity-70 tracking-wide leading-none">
-      ILTSMILL
+      IELTSMILL
     </span>
     <span className="text-[8px] leading-tight">Series</span>
     <span className="text-lg font-bold leading-none">
@@ -836,7 +836,7 @@ function MockTestContent() {
         map.set(sid, {
           id: sid,
           _id: `series_${sid}`,
-          name: `ILTSMILL Series — ${String(sid).padStart(2, "0")}`,
+          name: `IELTSMILL Series — ${String(sid).padStart(2, "0")}`,
           participants:
             test.participants || Math.floor(Math.random() * 5000 + 500),
           completedOf: 0,

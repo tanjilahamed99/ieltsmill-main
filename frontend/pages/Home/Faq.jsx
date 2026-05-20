@@ -23,7 +23,7 @@ const FAQItem = ({
       {open && (
         <div className="px-5 pb-5 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-4">
           {a ||
-            "The best way to prepare for the IELTS exam online is by using reliable platforms like ILTSMILL that offer mock tests, practice materials, expert feedback, and band score analysis to simulate the real test experience."}
+            "The best way to prepare for the IELTS exam online is by using reliable platforms like IELTSMILL that offer mock tests, practice materials, expert feedback, and band score analysis to simulate the real test experience."}
         </div>
       )}
     </div>
@@ -36,15 +36,15 @@ const Faq = () => {
       q: "What is the best way to prepare for the IELTS exam online?",
       open: true,
     },
-    { q: "Are ILTSMILL mock tests similar to the real IELTS exam?" },
-    { q: "Can I improve my IELTS band score by practicing on ILTSMILL?" },
-    { q: "Does ILTSMILL provide IELTS speaking and writing feedback?" },
-    { q: "Is ILTSMILL suitable for both IELTS Academic and General Training?" },
+    { q: "Are IELTSMILL mock tests similar to the real IELTS exam?" },
+    { q: "Can I improve my IELTS band score by practicing on IELTSMILL?" },
+    { q: "Does IELTSMILL provide IELTS speaking and writing feedback?" },
+    { q: "Is IELTSMILL suitable for both IELTS Academic and General Training?" },
     { q: "How can I access free IELTS Practice Questions?" },
-    { q: "Can I use ILTSMILL on mobile or tablet?" },
-    { q: "How accurate is the band score on ILTSMILL?" },
-    { q: "What is the price of IELTS mock tests on ILTSMILL?" },
-    { q: "Do I need to download any app to use ILTSMILL?" },
+    { q: "Can I use IELTSMILL on mobile or tablet?" },
+    { q: "How accurate is the band score on IELTSMILL?" },
+    { q: "What is the price of IELTS mock tests on IELTSMILL?" },
+    { q: "Do I need to download any app to use IELTSMILL?" },
   ];
   return (
     <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-14">

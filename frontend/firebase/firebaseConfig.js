@@ -8,9 +8,9 @@ import { getAuth } from "firebase/auth";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCKfB7MpNdrlxzIIGaeoCC6I0t59t8zV7w",
-  authDomain: "iltsmill.firebaseapp.com",
-  projectId: "iltsmill",
-  storageBucket: "iltsmill.firebasestorage.app",
+  authDomain: "IELTSMILL.firebaseapp.com",
+  projectId: "IELTSMILL",
+  storageBucket: "IELTSMILL.firebasestorage.app",
   messagingSenderId: "612810786101",
   appId: "1:612810786101:web:0bd569c6cd408c9e8cf87c",
 };

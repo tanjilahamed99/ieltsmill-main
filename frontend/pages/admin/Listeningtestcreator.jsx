@@ -169,7 +169,7 @@ export default function ListeningTestCreator({ initial, onSaved }) {
               <Input
                 value={form.seriesId}
                 onChange={(v) => setForm({ ...form, seriesId: v })}
-                placeholder="e.g. iltsmill-series-13"
+                placeholder="e.g. IELTSMILL-series-13"
               />
             </div>
             <div>

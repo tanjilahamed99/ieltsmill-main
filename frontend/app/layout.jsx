@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "ILTSMILL",
-  description: "Improve your self by ILTSMILL",
+  title: "IELTSMILL",
+  description: "Improve your self by IELTSMILL",
 };
 
 export default function RootLayout({ children }) {

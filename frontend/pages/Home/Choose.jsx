@@ -11,7 +11,7 @@ const Choose = () => {
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
           }}>
-          ILTSMILL
+          IELTSMILL
         </span>
       </h2>
       <p className="text-gray-500 text-base max-w-lg mx-auto">
