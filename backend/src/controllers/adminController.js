@@ -471,11 +471,10 @@ exports.createSelfReadingTest = async (req, res) => {
     const { type } = req.params;
 
     // Validate required fields
-    if (!title || !category || !time || !type) {
+    if (!title || !category || !type) {
       return res.status(400).json({
         success: false,
-        message:
-          "Missing required fields: title, category, time, passage, type",
+        message: "Missing required fields: title, category, passage, type",
       });
     }
 

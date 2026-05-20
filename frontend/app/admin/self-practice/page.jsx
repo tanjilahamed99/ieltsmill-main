@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import {
   adminSelfPracticeCreate,
@@ -69,13 +69,16 @@ const PracticeRow = ({ item, accent, onEdit, onDelete }) => (
 // Practice Form (Create / Edit)
 // ────────────────────────────────────────────────────────────────────────────
 const READING_CATEGORIES = [
-  "Academic Reading",
-  "General Training",
-  "True/False/Not Given",
-  "Matching Headings",
-  "Multiple Choice",
-  "Summary Completion",
-  "Short Answer",
+  "Biography",
+  "Process",
+  "History",
+  "Environment",
+  "Business",
+  "Single Theory",
+  "Technology",
+  "Education",
+  "Psychology",
+  "Science",
 ];
 
 const WRITING_CATEGORIES = [
@@ -90,13 +93,14 @@ const WRITING_CATEGORIES = [
 
 const DIFFICULTIES = ["Easy", "Medium", "Hard", "Expert"];
 
-const Field = ({ label, children, required }) => (
+const Field = ({ label, children, required, hint }) => (
   <div>
     <label className="block text-xs font-semibold text-slate-600 mb-1.5">
       {label}
       {required && <span className="text-red-500 ml-0.5">*</span>}
     </label>
     {children}
+    {hint && <p className="text-[11px] text-slate-400 mt-1">{hint}</p>}
   </div>
 );
 
@@ -113,9 +117,12 @@ const PracticeForm = ({ type, initial, onSaved, onCancel }) => {
     category: initial?.category || categories[0],
     difficulty: initial?.difficulty || "Medium",
     passage: initial?.passage || "",
+    // ── NEW: vocabulary field ──
+    vocabulary: initial?.vocabulary || "",
     prompt: initial?.prompt || "",
     wordLimit: initial?.wordLimit || "",
     time: initial?.time || "",
+    timeLimit: initial?.timeLimit || "",
   });
 
   const [saving, setSaving] = useState(false);
@@ -201,7 +208,7 @@ const PracticeForm = ({ type, initial, onSaved, onCancel }) => {
           </div>
         </div>
 
-        {/* Reading-specific: passage + questions */}
+        {/* Reading-specific: passage + vocabulary */}
         {type === "reading" && (
           <>
             <Field label="Passage" required>
@@ -211,6 +218,35 @@ const PracticeForm = ({ type, initial, onSaved, onCancel }) => {
                 onChange={(e) => set("passage", e.target.value)}
                 placeholder="Paste the reading passage here..."
               />
+            </Field>
+
+            {/* ── NEW: Vocabulary section ── */}
+            <Field
+              label="Vocabulary & Word Notes"
+              hint="Add key words, definitions, or phrases from the passage to help students understand. E.g. 'Ambiguous – having more than one possible meaning'">
+              <div
+                className="rounded-xl overflow-hidden"
+                style={{ border: `1.5px solid ${accent}33` }}>
+                {/* Header badge */}
+                <div
+                  className="flex items-center gap-2 px-4 py-2.5"
+                  style={{ background: `${accent}10` }}>
+                  <span className="text-base">📚</span>
+                  <span className="text-xs font-bold" style={{ color: accent }}>
+                    Vocabulary Helper
+                  </span>
+                  <span className="ml-auto text-[10px] text-slate-400 font-medium">
+                    Shown below the passage for students
+                  </span>
+                </div>
+                <textarea
+                  className="w-full text-sm px-4 py-3 resize-y focus:outline-none bg-white placeholder-slate-300"
+                  style={{ minHeight: "140px" }}
+                  value={form.vocabulary}
+                  onChange={(e) => set("vocabulary", e.target.value)}
+                  placeholder={`Enter vocabulary words and explanations, one per line.\n\nExamples:\nAmbiguous – having more than one possible meaning\nCognitive – relating to mental processes like thinking and memory\nSubsidize – to support financially, especially by a government`}
+                />
+              </div>
             </Field>
           </>
         )}
@@ -237,6 +273,7 @@ const PracticeForm = ({ type, initial, onSaved, onCancel }) => {
             </Field>
           </>
         )}
+
         {error && (
           <div className="text-sm text-red-500 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
             ⚠️ {error}
@@ -266,6 +303,86 @@ const PracticeForm = ({ type, initial, onSaved, onCancel }) => {
 };
 
 // ────────────────────────────────────────────────────────────────────────────
+// Filter Bar
+// ────────────────────────────────────────────────────────────────────────────
+const FilterBar = ({ type, filters, onChange, accent }) => {
+  const categories =
+    type === "reading" ? READING_CATEGORIES : WRITING_CATEGORIES;
+
+  return (
+    <div
+      className="flex flex-wrap items-center gap-3 mb-5 p-4 rounded-2xl"
+      style={{ background: "#f8fafc", border: "1px solid #e5e7eb" }}>
+      {/* Search by name */}
+      <div className="flex items-center gap-2 flex-1 min-w-[180px] bg-white rounded-xl border border-slate-200 px-3 py-2">
+        <svg
+          className="w-3.5 h-3.5 text-slate-400 shrink-0"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          viewBox="0 0 24 24">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M21 21l-4.35-4.35M17 11A6 6 0 111 11a6 6 0 0116 0z"
+          />
+        </svg>
+        <input
+          className="text-xs flex-1 focus:outline-none bg-transparent placeholder-slate-400 text-slate-700"
+          placeholder="Search by name…"
+          value={filters.name}
+          onChange={(e) => onChange({ ...filters, name: e.target.value })}
+        />
+        {filters.name && (
+          <button
+            onClick={() => onChange({ ...filters, name: "" })}
+            className="text-slate-300 hover:text-slate-500 text-xs">
+            ✕
+          </button>
+        )}
+      </div>
+
+      {/* Category filter */}
+      <select
+        className="text-xs border border-slate-200 rounded-xl px-3 py-2 bg-white text-slate-600 focus:outline-none focus:ring-2"
+        style={{ "--tw-ring-color": accent }}
+        value={filters.category}
+        onChange={(e) => onChange({ ...filters, category: e.target.value })}>
+        <option value="">All Categories</option>
+        {categories.map((c) => (
+          <option key={c} value={c}>
+            {c}
+          </option>
+        ))}
+      </select>
+
+      {/* Difficulty filter */}
+      <select
+        className="text-xs border border-slate-200 rounded-xl px-3 py-2 bg-white text-slate-600 focus:outline-none focus:ring-2"
+        style={{ "--tw-ring-color": accent }}
+        value={filters.difficulty}
+        onChange={(e) => onChange({ ...filters, difficulty: e.target.value })}>
+        <option value="">All Difficulties</option>
+        {DIFFICULTIES.map((d) => (
+          <option key={d} value={d}>
+            {d}
+          </option>
+        ))}
+      </select>
+
+      {/* Clear all */}
+      {(filters.name || filters.category || filters.difficulty) && (
+        <button
+          onClick={() => onChange({ name: "", category: "", difficulty: "" })}
+          className="text-xs px-3 py-2 rounded-xl border border-slate-200 text-slate-400 hover:text-red-500 hover:border-red-200 transition-all font-medium">
+          Clear Filters
+        </button>
+      )}
+    </div>
+  );
+};
+
+// ────────────────────────────────────────────────────────────────────────────
 // Practice List for one type
 // ────────────────────────────────────────────────────────────────────────────
 const PracticeList = ({ type, accent, onCreateNew, onEdit }) => {
@@ -275,6 +392,13 @@ const PracticeList = ({ type, accent, onCreateNew, onEdit }) => {
   const [total, setTotal] = useState(0);
   const [toast, setToast] = useState(null);
   const [refetch, setRefetch] = useState(false);
+
+  // ── NEW: filter state ──
+  const [filters, setFilters] = useState({
+    name: "",
+    category: "",
+    difficulty: "",
+  });
 
   useEffect(() => {
     const load = async () => {
@@ -292,6 +416,20 @@ const PracticeList = ({ type, accent, onCreateNew, onEdit }) => {
     load();
   }, [type, page, refetch]);
 
+  // ── Client-side filtering ──
+  const filteredItems = items.filter((item) => {
+    const matchName =
+      !filters.name ||
+      item.title?.toLowerCase().includes(filters.name.toLowerCase());
+    const matchCategory =
+      !filters.category || item.category === filters.category;
+    const matchDifficulty =
+      !filters.difficulty || item.difficulty === filters.difficulty;
+    return matchName && matchCategory && matchDifficulty;
+  });
+
+  const isFiltering = filters.name || filters.category || filters.difficulty;
+
   const handleDelete = async (item) => {
     if (!confirm(`Delete "${item.title}"? This cannot be undone.`)) return;
     try {
@@ -307,7 +445,11 @@ const PracticeList = ({ type, accent, onCreateNew, onEdit }) => {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <p className="text-xs text-slate-400">{total} practice items</p>
+        <p className="text-xs text-slate-400">
+          {isFiltering
+            ? `${filteredItems.length} of ${total} practice items`
+            : `${total} practice items`}
+        </p>
         <button
           onClick={onCreateNew}
           className="text-xs font-bold px-4 py-2 rounded-xl text-white transition-all hover:scale-105"
@@ -317,6 +459,14 @@ const PracticeList = ({ type, accent, onCreateNew, onEdit }) => {
           + Add New
         </button>
       </div>
+
+      {/* ── NEW: Filter bar ── */}
+      <FilterBar
+        type={type}
+        filters={filters}
+        onChange={setFilters}
+        accent={accent}
+      />
 
       <div
         className="rounded-2xl bg-white overflow-hidden"
@@ -328,22 +478,37 @@ const PracticeList = ({ type, accent, onCreateNew, onEdit }) => {
               style={{ borderColor: accent, borderTopColor: "transparent" }}
             />
           </div>
-        ) : items.length === 0 ? (
+        ) : filteredItems.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-3xl mb-3">{type === "reading" ? "📖" : "✍️"}</p>
-            <p className="text-sm text-slate-400 mb-3">
-              No {type} practice items yet.
+            <p className="text-3xl mb-3">
+              {isFiltering ? "🔍" : type === "reading" ? "📖" : "✍️"}
             </p>
-            <button
-              onClick={onCreateNew}
-              className="text-xs font-bold px-4 py-2 rounded-xl text-white"
-              style={{ background: accent }}>
-              Create First Item
-            </button>
+            <p className="text-sm text-slate-400 mb-3">
+              {isFiltering
+                ? "No items match your filters."
+                : `No ${type} practice items yet.`}
+            </p>
+            {isFiltering ? (
+              <button
+                onClick={() =>
+                  setFilters({ name: "", category: "", difficulty: "" })
+                }
+                className="text-xs font-bold px-4 py-2 rounded-xl text-white"
+                style={{ background: accent }}>
+                Clear Filters
+              </button>
+            ) : (
+              <button
+                onClick={onCreateNew}
+                className="text-xs font-bold px-4 py-2 rounded-xl text-white"
+                style={{ background: accent }}>
+                Create First Item
+              </button>
+            )}
           </div>
         ) : (
           <>
-            {items.map((item) => (
+            {filteredItems.map((item) => (
               <PracticeRow
                 key={item._id}
                 item={item}
@@ -352,7 +517,7 @@ const PracticeList = ({ type, accent, onCreateNew, onEdit }) => {
                 onDelete={() => handleDelete(item)}
               />
             ))}
-            {total > 10 && (
+            {!isFiltering && total > 10 && (
               <div className="flex items-center justify-center gap-3 p-4 border-t border-slate-100">
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}

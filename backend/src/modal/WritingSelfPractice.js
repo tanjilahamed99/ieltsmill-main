@@ -21,6 +21,7 @@ const WritingPractice = new Schema(
     // Content
     prompt: { type: String, required: true },
     minWords: { type: Number, default: 250 },
+    vocabulary: { type: String }, // The writing text
 
     difficulty: {
       type: String,

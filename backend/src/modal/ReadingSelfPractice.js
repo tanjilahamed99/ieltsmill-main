@@ -17,10 +17,11 @@ const ReadingSelfPractice = new Schema(
       default: "Academic",
     },
     category: { type: String, required: true }, // "Environment", "Science", "History", etc.
-    time: { type: Number, required: true }, // Time in minutes (e.g., 20)
+    time: { type: Number }, // Time in minutes (e.g., 20)
 
     // Content
     passage: { type: String, required: true }, // The reading text
+    vocabulary: { type: String }, // The reading text
 
     difficulty: {
       type: String,
