@@ -20,10 +20,12 @@ connectDB();
 const authRoutes = require("./src/routes/authRoutes");
 const adminRoutes = require("./src/routes/adminRoutes");
 const testRoutes = require("./src/routes/testRoutes");
+const submissionsRoutes = require("./src/routes/submissions");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/test", testRoutes);
+app.use("/api/submissions", submissionsRoutes);
 
 // Health check endpoint
 app.get("/", (req, res) => {

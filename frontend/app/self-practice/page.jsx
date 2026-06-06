@@ -7,16 +7,18 @@ import Navbar from "../../components/Navbar/Navbar";
 import { selfPracticeList } from "../../action/student";
 const Footer = dynamic(() => import("../../components/Footer/Footer"));
 
+// ─── Data Fetcher ─────────────────────────────────────────────────────────────
 const fetchPractices = async (type, page = 1) => {
   const { data } = await selfPracticeList(type, page);
   return data;
 };
 
+// ─── Constants ────────────────────────────────────────────────────────────────
 const LEVEL_COLORS = {
-  Academic: { bg: "#EFF6FF", text: "#1D4ED8", border: "#BFDBFE" },
-  General: { bg: "#F0FDF4", text: "#15803D", border: "#BBF7D0" },
-  "Task 1": { bg: "#FFF7ED", text: "#C2410C", border: "#FED7AA" },
-  "Task 2": { bg: "#FAF5FF", text: "#7E22CE", border: "#E9D5FF" },
+  Academic:  { bg: "#EFF6FF", text: "#1D4ED8", border: "#BFDBFE" },
+  General:   { bg: "#F0FDF4", text: "#15803D", border: "#BBF7D0" },
+  "Task 1":  { bg: "#FFF7ED", text: "#C2410C", border: "#FED7AA" },
+  "Task 2":  { bg: "#FAF5FF", text: "#7E22CE", border: "#E9D5FF" },
 };
 
 const READING_CATEGORIES = [
@@ -32,6 +34,7 @@ const WRITING_CATEGORIES = [
 
 const DIFFICULTIES = ["Easy", "Medium", "Hard", "Expert"];
 
+// ─── Icons ────────────────────────────────────────────────────────────────────
 const BookIcon = () => (
   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
@@ -69,17 +72,14 @@ const XIcon = () => (
   </svg>
 );
 
-// ─── Filter Bar ─────────────────────────────────────────────────────────────
-
+// ─── Filter Bar ───────────────────────────────────────────────────────────────
 function FilterBar({ filters, onChange, activeType }) {
   const categories = activeType === "reading" ? READING_CATEGORIES : WRITING_CATEGORIES;
   const hasActive = filters.search || filters.category || filters.difficulty;
-
   const clear = () => onChange({ search: "", category: "", difficulty: "" });
 
   return (
     <div className="filter-bar">
-      {/* Search */}
       <div className="filter-search-wrap">
         <span className="filter-icon-left"><SearchIcon /></span>
         <input
@@ -89,37 +89,34 @@ function FilterBar({ filters, onChange, activeType }) {
           onChange={(e) => onChange({ ...filters, search: e.target.value })}
         />
         {filters.search && (
-          <button className="filter-x" onClick={() => onChange({ ...filters, search: "" })}><XIcon /></button>
+          <button className="filter-x" onClick={() => onChange({ ...filters, search: "" })}>
+            <XIcon />
+          </button>
         )}
       </div>
 
-      {/* Category */}
       <div className="filter-select-wrap">
         <FilterIcon />
         <select
           className="filter-select"
           value={filters.category}
-          onChange={(e) => onChange({ ...filters, category: e.target.value })}
-        >
+          onChange={(e) => onChange({ ...filters, category: e.target.value })}>
           <option value="">All Categories</option>
           {categories.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
       </div>
 
-      {/* Difficulty */}
       <div className="filter-select-wrap">
         <FilterIcon />
         <select
           className="filter-select"
           value={filters.difficulty}
-          onChange={(e) => onChange({ ...filters, difficulty: e.target.value })}
-        >
+          onChange={(e) => onChange({ ...filters, difficulty: e.target.value })}>
           <option value="">All Difficulties</option>
           {DIFFICULTIES.map((d) => <option key={d} value={d}>{d}</option>)}
         </select>
       </div>
 
-      {/* Clear */}
       {hasActive && (
         <button className="filter-clear-btn" onClick={clear}>
           <XIcon /> Clear
@@ -129,32 +126,30 @@ function FilterBar({ filters, onChange, activeType }) {
   );
 }
 
-// ─── Active filter chips ─────────────────────────────────────────────────────
-
+// ─── Active Chips ─────────────────────────────────────────────────────────────
 function ActiveChips({ filters, onChange, total, filtered }) {
   const chips = [];
-  if (filters.search) chips.push({ label: `"${filters.search}"`, key: "search" });
-  if (filters.category) chips.push({ label: filters.category, key: "category" });
-  if (filters.difficulty) chips.push({ label: filters.difficulty, key: "difficulty" });
+  if (filters.search)    chips.push({ label: `"${filters.search}"`, key: "search" });
+  if (filters.category)  chips.push({ label: filters.category,       key: "category" });
+  if (filters.difficulty) chips.push({ label: filters.difficulty,    key: "difficulty" });
   if (!chips.length) return null;
 
   return (
     <div className="active-chips-row">
-      <span className="chips-result-text">
-        {filtered} of {total} results
-      </span>
+      <span className="chips-result-text">{filtered} of {total} results</span>
       {chips.map((chip) => (
         <span key={chip.key} className="active-chip">
           {chip.label}
-          <button className="chip-remove" onClick={() => onChange({ ...filters, [chip.key]: "" })}><XIcon /></button>
+          <button className="chip-remove" onClick={() => onChange({ ...filters, [chip.key]: "" })}>
+            <XIcon />
+          </button>
         </span>
       ))}
     </div>
   );
 }
 
-// ─── Practice Card ───────────────────────────────────────────────────────────
-
+// ─── Practice Card ────────────────────────────────────────────────────────────
 function PracticeCard({ item, type }) {
   const levelStyle = LEVEL_COLORS[item.level] || { bg: "#F9FAFB", text: "#374151", border: "#E5E7EB" };
   return (
@@ -180,13 +175,12 @@ function PracticeCard({ item, type }) {
   );
 }
 
-// ─── Pagination ──────────────────────────────────────────────────────────────
-
+// ─── Pagination ───────────────────────────────────────────────────────────────
 function Pagination({ pagination, onPageChange }) {
   const { page, pages, total, limit } = pagination;
   if (pages <= 1) return null;
   const from = (page - 1) * limit + 1;
-  const to = Math.min(page * limit, total);
+  const to   = Math.min(page * limit, total);
 
   const getPageNumbers = () => {
     const nums = [];
@@ -211,7 +205,12 @@ function Pagination({ pagination, onPageChange }) {
           num === "..." ? (
             <span key={`e-${idx}`} className="page-ellipsis">…</span>
           ) : (
-            <button key={num} className={`page-btn ${num === page ? "page-btn--active" : ""}`} onClick={() => onPageChange(num)}>{num}</button>
+            <button
+              key={num}
+              className={`page-btn ${num === page ? "page-btn--active" : ""}`}
+              onClick={() => onPageChange(num)}>
+              {num}
+            </button>
           )
         )}
         <button className="page-btn" onClick={() => onPageChange(page + 1)} disabled={page === pages}>›</button>
@@ -220,38 +219,54 @@ function Pagination({ pagination, onPageChange }) {
   );
 }
 
-// ─── Practice Section ────────────────────────────────────────────────────────
-
+// ─── Practice Section ─────────────────────────────────────────────────────────
 function PracticeSection({ type, icon, title, color, description }) {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [items, setItems]           = useState([]);
+  const [loading, setLoading]       = useState(true);
+  const [error, setError]           = useState(null);
   const [pagination, setPagination] = useState({ page: 1, limit: 20, total: 0, pages: 0 });
-  const [filters, setFilters] = useState({ search: "", category: "", difficulty: "" });
+  const [filters, setFilters]       = useState({ search: "", category: "", difficulty: "" });
 
+  // ✅ FIX 1: useCallback so loadPage is stable and can be passed to Pagination
   const loadPage = useCallback(async (pageNum) => {
     setLoading(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    const data = await fetchPractices(type, pageNum);
-    setItems(data.data);
-    setPagination(data.pagination);
-    setLoading(false);
+    setError(null);
+    try {
+      // ✅ FIX 2: pageNum is now correctly passed from the argument, not undefined
+      const data = await fetchPractices(type, pageNum);
+      setItems(data.data);
+      setPagination(data.pagination);
+    } catch (err) {
+      setError("Failed to load. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }, [type]);
 
-  useEffect(() => { loadPage(1); }, [loadPage]);
+  // ✅ FIX 3: useEffect depends on loadPage, runs once on mount
+  useEffect(() => {
+    loadPage(1);
+  }, [loadPage]);
+
+  // ✅ FIX 4: Scroll to section top (not window top) on page change
+  const handlePageChange = (pageNum) => {
+    loadPage(pageNum);
+    document.getElementById(`section-${type}`)?.scrollIntoView({ behavior: "smooth" });
+  };
 
   // Client-side filtering
   const filtered = items.filter((item) => {
     const q = filters.search.toLowerCase();
     const matchSearch = !q || item.title?.toLowerCase().includes(q);
-    const matchCat = !filters.category || item.category === filters.category;
-    const matchDiff = !filters.difficulty || item.difficulty === filters.difficulty;
+    const matchCat    = !filters.category   || item.category   === filters.category;
+    const matchDiff   = !filters.difficulty || item.difficulty === filters.difficulty;
     return matchSearch && matchCat && matchDiff;
   });
 
   const isFiltering = filters.search || filters.category || filters.difficulty;
 
   return (
-    <section className="practice-section">
+    <section className="practice-section" id={`section-${type}`}>
       <div className="section-header">
         <div className="section-title-wrap">
           <span className="section-icon" style={{ background: color + "18", color }}>{icon}</span>
@@ -262,20 +277,19 @@ function PracticeSection({ type, icon, title, color, description }) {
         </div>
       </div>
 
-      {/* ── Filter bar ── */}
       <FilterBar filters={filters} onChange={setFilters} activeType={type} />
+      <ActiveChips filters={filters} onChange={setFilters} total={items.length} filtered={filtered.length} />
 
-      {/* ── Active filter chips + count ── */}
-      <ActiveChips
-        filters={filters}
-        onChange={setFilters}
-        total={items.length}
-        filtered={filtered.length}
-      />
-
-      {loading ? (
+      {/* ✅ FIX 5: Show error state */}
+      {error ? (
+        <div className="error-state">
+          <span className="error-icon">⚠️</span>
+          <p className="error-title">{error}</p>
+          <button className="empty-clear" onClick={() => loadPage(pagination.page)}>Retry</button>
+        </div>
+      ) : loading ? (
         <div className="cards-grid">
-          {[1, 2, 3].map((i) => <div key={i} className="skeleton-card" />)}
+          {[1, 2, 3, 4, 5, 6].map((i) => <div key={i} className="skeleton-card" />)}
         </div>
       ) : filtered.length === 0 ? (
         <div className="empty-state">
@@ -290,53 +304,42 @@ function PracticeSection({ type, icon, title, color, description }) {
         <>
           <div className="cards-grid">
             {filtered.map((item, idx) => (
-              <PracticeCard key={idx} item={item} type={type} />
+              <PracticeCard key={item._id || idx} item={item} type={type} />
             ))}
           </div>
-          {!isFiltering && <Pagination pagination={pagination} onPageChange={loadPage} />}
+          {/* ✅ FIX 6: Only show pagination when not filtering, and pass correct handler */}
+          {!isFiltering && (
+            <Pagination pagination={pagination} onPageChange={handlePageChange} />
+          )}
         </>
       )}
     </section>
   );
 }
 
-// ─── Type Tab Switcher (hero area) ──────────────────────────────────────────
-
+// ─── Type Tab Switcher ────────────────────────────────────────────────────────
 function TypeTabs({ active, onChange }) {
   return (
     <div className="type-tabs">
-      <button
-        className={`type-tab ${active === "all" ? "type-tab--active-all" : ""}`}
-        onClick={() => onChange("all")}
-      >
-        All
-      </button>
-      <button
-        className={`type-tab ${active === "reading" ? "type-tab--active-reading" : ""}`}
-        onClick={() => onChange("reading")}
-      >
+      <button className={`type-tab ${active === "reading" ? "type-tab--active-reading" : ""}`} onClick={() => onChange("reading")}>
         📖 Reading
       </button>
-      <button
-        className={`type-tab ${active === "writing" ? "type-tab--active-writing" : ""}`}
-        onClick={() => onChange("writing")}
-      >
+      <button className={`type-tab ${active === "writing" ? "type-tab--active-writing" : ""}`} onClick={() => onChange("writing")}>
         ✍️ Writing
       </button>
     </div>
   );
 }
 
-// ─── Page ────────────────────────────────────────────────────────────────────
-
+// ─── Page ─────────────────────────────────────────────────────────────────────
 const SelfPractice = () => {
-  const [activeType, setActiveType] = useState("all");
+  // ✅ FIX 7: Default to "reading" not "all" — so only ONE API call fires on load
+  const [activeType, setActiveType] = useState("reading");
 
   return (
     <div className="sp-root">
       <Navbar />
       <main className="sp-main">
-
         {/* Hero */}
         <div className="sp-hero">
           <div className="hero-badge">IELTS Preparation</div>
@@ -363,13 +366,13 @@ const SelfPractice = () => {
             </div>
           </div>
 
-          {/* ── Type tabs in hero ── */}
-          {/* <TypeTabs active={activeType} onChange={setActiveType} /> */}
+          {/* ✅ FIX 8: TypeTabs now active so user switches between sections */}
+          <TypeTabs active={activeType} onChange={setActiveType} />
         </div>
 
-        {/* Sections */}
+        {/* ✅ FIX 9: Render only the active section — one API call at a time */}
         <div className="sp-content">
-          {(activeType === "all" || activeType === "reading") && (
+          {activeType === "reading" && (
             <PracticeSection
               type="reading"
               icon={<BookIcon />}
@@ -378,7 +381,7 @@ const SelfPractice = () => {
               description="Academic & General Training passages with comprehension questions"
             />
           )}
-          {(activeType === "all" || activeType === "writing") && (
+          {activeType === "writing" && (
             <PracticeSection
               type="writing"
               icon={<PenIcon />}
@@ -399,8 +402,7 @@ const SelfPractice = () => {
         /* ── HERO ── */
         .sp-hero {
           background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 60%, #1D4ED8 100%);
-          padding: 80px 24px 56px;
-          text-align: center;
+          padding: 80px 24px 56px; text-align: center;
           position: relative; overflow: hidden;
         }
         .sp-hero::before {
@@ -415,9 +417,8 @@ const SelfPractice = () => {
           padding: 6px 16px; border-radius: 100px; margin-bottom: 20px;
         }
         .hero-title {
-          font-family: 'Lora', serif;
-          font-size: clamp(36px, 6vw, 64px); font-weight: 700;
-          color: #fff; margin: 0 0 16px; position: relative;
+          font-family: 'Lora', serif; font-size: clamp(36px, 6vw, 64px);
+          font-weight: 700; color: #fff; margin: 0 0 16px; position: relative;
         }
         .hero-subtitle {
           color: #94A3B8; font-size: clamp(15px, 2.5vw, 18px);
@@ -438,21 +439,15 @@ const SelfPractice = () => {
         /* ── TYPE TABS ── */
         .type-tabs {
           display: inline-flex; gap: 8px;
-          background: rgba(255,255,255,0.08);
-          border: 1px solid rgba(255,255,255,0.14);
-          border-radius: 14px; padding: 6px;
-          position: relative;
+          background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14);
+          border-radius: 14px; padding: 6px; position: relative;
         }
         .type-tab {
-          padding: 9px 22px; border-radius: 10px;
-          border: none; cursor: pointer;
-          font-family: 'DM Sans', sans-serif;
-          font-size: 14px; font-weight: 600;
-          color: #94A3B8; background: transparent;
-          transition: all 0.18s ease;
+          padding: 9px 22px; border-radius: 10px; border: none; cursor: pointer;
+          font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600;
+          color: #94A3B8; background: transparent; transition: all 0.18s ease;
         }
         .type-tab:hover { color: #fff; background: rgba(255,255,255,0.1); }
-        .type-tab--active-all    { background: #fff !important; color: #0F172A !important; }
         .type-tab--active-reading { background: #1D4ED8 !important; color: #fff !important; }
         .type-tab--active-writing { background: #7E22CE !important; color: #fff !important; }
 
@@ -476,12 +471,10 @@ const SelfPractice = () => {
         .filter-bar {
           display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
           background: #fff; border: 1px solid #E2E8F0;
-          border-radius: 14px; padding: 12px 16px;
-          margin-bottom: 12px;
+          border-radius: 14px; padding: 12px 16px; margin-bottom: 12px;
         }
         .filter-search-wrap {
-          display: flex; align-items: center; gap: 8px;
-          flex: 1; min-width: 200px;
+          display: flex; align-items: center; gap: 8px; flex: 1; min-width: 200px;
           background: #F8FAFC; border: 1px solid #E2E8F0;
           border-radius: 10px; padding: 8px 12px; color: #94A3B8;
         }
@@ -492,12 +485,10 @@ const SelfPractice = () => {
         }
         .filter-search-input::placeholder { color: #94A3B8; }
         .filter-x {
-          background: none; border: none; cursor: pointer;
-          color: #CBD5E1; display: flex; align-items: center;
-          padding: 0; transition: color 0.15s;
+          background: none; border: none; cursor: pointer; color: #CBD5E1;
+          display: flex; align-items: center; padding: 0; transition: color 0.15s;
         }
         .filter-x:hover { color: #EF4444; }
-
         .filter-select-wrap {
           display: flex; align-items: center; gap: 7px;
           background: #F8FAFC; border: 1px solid #E2E8F0;
@@ -506,15 +497,12 @@ const SelfPractice = () => {
         .filter-select {
           border: none; outline: none; background: transparent;
           font-size: 13px; font-family: 'DM Sans', sans-serif;
-          color: #374151; cursor: pointer;
-          min-width: 130px;
+          color: #374151; cursor: pointer; min-width: 130px;
         }
-
         .filter-clear-btn {
           display: flex; align-items: center; gap: 5px;
-          border: 1px solid #FECACA; background: #FEF2F2;
-          color: #DC2626; border-radius: 10px;
-          padding: 8px 14px; font-size: 13px; font-weight: 600;
+          border: 1px solid #FECACA; background: #FEF2F2; color: #DC2626;
+          border-radius: 10px; padding: 8px 14px; font-size: 13px; font-weight: 600;
           cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif;
           white-space: nowrap;
         }
@@ -528,16 +516,23 @@ const SelfPractice = () => {
         .chips-result-text { font-size: 12px; color: #94A3B8; font-weight: 500; }
         .active-chip {
           display: inline-flex; align-items: center; gap: 5px;
-          background: #EFF6FF; border: 1px solid #BFDBFE;
-          color: #1D4ED8; border-radius: 100px;
-          padding: 4px 10px 4px 12px; font-size: 12px; font-weight: 600;
+          background: #EFF6FF; border: 1px solid #BFDBFE; color: #1D4ED8;
+          border-radius: 100px; padding: 4px 10px 4px 12px; font-size: 12px; font-weight: 600;
         }
         .chip-remove {
-          background: none; border: none; cursor: pointer;
-          color: #93C5FD; display: flex; align-items: center;
-          padding: 0; transition: color 0.15s;
+          background: none; border: none; cursor: pointer; color: #93C5FD;
+          display: flex; align-items: center; padding: 0; transition: color 0.15s;
         }
         .chip-remove:hover { color: #1D4ED8; }
+
+        /* ── ERROR STATE ── */
+        .error-state {
+          display: flex; flex-direction: column; align-items: center;
+          padding: 60px 24px; text-align: center;
+          background: #FEF2F2; border: 1px solid #FECACA; border-radius: 16px;
+        }
+        .error-icon { font-size: 40px; margin-bottom: 12px; }
+        .error-title { font-size: 16px; font-weight: 600; color: #DC2626; margin-bottom: 16px; }
 
         /* ── EMPTY STATE ── */
         .empty-state {

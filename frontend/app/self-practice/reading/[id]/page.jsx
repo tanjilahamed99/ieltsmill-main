@@ -6,6 +6,7 @@ import Link from "next/link";
 import Navbar from "../../../../components/Navbar/Navbar";
 import { useParams } from "next/navigation";
 import { selfPracticeById } from "../../../../action/student";
+import { UserRoute } from "../../../../Providers/PrivateRoute";
 
 // ─── Split passage text into annotated spans ──────────────────────────────────
 function buildSpans(text, highlights) {
@@ -27,30 +28,70 @@ function buildSpans(text, highlights) {
 
 // ─── Icons ───────────────────────────────────────────────────────────────────
 const ChevronLeft = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round">
     <polyline points="15 18 9 12 15 6" />
   </svg>
 );
 const ClockIcon = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="13"
+    height="13"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round">
     <circle cx="12" cy="12" r="10" />
     <polyline points="12 6 12 12 16 14" />
   </svg>
 );
 const MarkerIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.2"
+    strokeLinecap="round"
+    strokeLinejoin="round">
     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
   </svg>
 );
 const EraserIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.2"
+    strokeLinecap="round"
+    strokeLinejoin="round">
     <path d="M20 20H7L3 16l11-11 6 6-2.5 2.5" />
     <path d="M6 14l4 4" />
   </svg>
 );
 const BookIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round">
     <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
     <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
   </svg>
@@ -94,7 +135,9 @@ function Passage({ text, highlights, onSelect }) {
       onTouchEnd={handlePointerUp}>
       {spans.map((s, i) =>
         s.highlighted ? (
-          <mark key={i} className="passage-mark">{s.text}</mark>
+          <mark key={i} className="passage-mark">
+            {s.text}
+          </mark>
         ) : (
           <span key={i}>{s.text}</span>
         ),
@@ -104,7 +147,13 @@ function Passage({ text, highlights, onSelect }) {
 }
 
 // ─── Floating popup ───────────────────────────────────────────────────────────
-function SelectionPopup({ selection, isHighlighted, onHighlight, onClear, onDismiss }) {
+function SelectionPopup({
+  selection,
+  isHighlighted,
+  onHighlight,
+  onClear,
+  onDismiss,
+}) {
   const ref = useRef(null);
   const [pos, setPos] = useState({ top: -999, left: -999, ready: false });
 
@@ -221,16 +270,24 @@ export default function ReadingDetail() {
   }, [id]);
 
   const isHighlighted = selection
-    ? highlights.some((h) => h.start <= selection.start && h.end >= selection.end)
+    ? highlights.some(
+        (h) => h.start <= selection.start && h.end >= selection.end,
+      )
     : false;
 
   const handleSelect = useCallback((sel) => setSelection(sel), []);
 
   const handleHighlight = () => {
     if (!selection) return;
-    const newH = { id: Date.now().toString(), start: selection.start, end: selection.end };
+    const newH = {
+      id: Date.now().toString(),
+      start: selection.start,
+      end: selection.end,
+    };
     setHighlights((prev) => {
-      const rest = prev.filter((h) => h.end <= newH.start || h.start >= newH.end);
+      const rest = prev.filter(
+        (h) => h.end <= newH.start || h.start >= newH.end,
+      );
       return [...rest, newH].sort((a, b) => a.start - b.start);
     });
     window.getSelection()?.removeAllRanges();
@@ -264,82 +321,87 @@ export default function ReadingDetail() {
   }
 
   return (
-    <div className="rd-root">
-      {/* Top bar */}
-      <header className="rd-topbar">
-        <Link href="/self-practice" className="back-link">
-          <ChevronLeft /> Back
-        </Link>
+    <UserRoute>
+      <div className="rd-root">
+        {/* Top bar */}
+        <header className="rd-topbar">
+          <Link href="/self-practice" className="back-link">
+            <ChevronLeft /> Back
+          </Link>
 
-        <div className="rd-meta">
-          <span className="rd-level">{data.level}</span>
-          <span className="rd-heading-label">{data.title}</span>
-        </div>
+          <div className="rd-meta">
+            <span className="rd-level">{data.level}</span>
+            <span className="rd-heading-label">{data.title}</span>
+          </div>
 
-        <div className="rd-controls">
-          {highlights.length > 0 && (
-            <button
-              className="clear-all-btn"
-              onClick={() => { setHighlights([]); setSelection(null); }}>
-              <EraserIcon /> Clear all
-              <span className="clear-all-count">{highlights.length}</span>
-            </button>
-          )}
-        </div>
-      </header>
+          <div className="rd-controls">
+            {highlights.length > 0 && (
+              <button
+                className="clear-all-btn"
+                onClick={() => {
+                  setHighlights([]);
+                  setSelection(null);
+                }}>
+                <EraserIcon /> Clear all
+                <span className="clear-all-count">{highlights.length}</span>
+              </button>
+            )}
+          </div>
+        </header>
 
-      {/* Main */}
-      <main className="rd-main">
-        {/* Chips row */}
-        <div className="chips-row">
-          <span className="chip chip-cat">{data.category}</span>
-          <span className="chip chip-time">
-            <ClockIcon /> {data.time} min
-          </span>
-          <span className="chip chip-tip">
-            <MarkerIcon /> Select text to highlight
-          </span>
+        {/* Main */}
+        <main className="rd-main">
+          {/* Chips row */}
+          <div className="chips-row">
+            <span className="chip chip-cat">{data.category}</span>
+            <span className="chip chip-time">
+              <ClockIcon /> {data.time} min
+            </span>
+            <span className="chip chip-tip">
+              <MarkerIcon /> Select text to highlight
+            </span>
+            {data.vocabulary && (
+              <span className="chip chip-vocab">
+                <BookIcon /> Vocabulary included
+              </span>
+            )}
+            {highlights.length > 0 && (
+              <span className="chip chip-hl">
+                🖊 {highlights.length} highlight
+                {highlights.length !== 1 ? "s" : ""}
+              </span>
+            )}
+          </div>
+
+          {/* Passage */}
+          <article className="passage-card">
+            <h1 className="passage-title">{data.title}</h1>
+            <div className="passage-rule" />
+            <Passage
+              text={data.passage}
+              highlights={highlights}
+              onSelect={handleSelect}
+            />
+          </article>
+
+          {/* Vocabulary Section */}
           {data.vocabulary && (
-            <span className="chip chip-vocab">
-              <BookIcon /> Vocabulary included
-            </span>
+            <VocabularySection vocabulary={data.vocabulary} />
           )}
-          {highlights.length > 0 && (
-            <span className="chip chip-hl">
-              🖊 {highlights.length} highlight{highlights.length !== 1 ? "s" : ""}
-            </span>
-          )}
-        </div>
+        </main>
 
-        {/* Passage */}
-        <article className="passage-card">
-          <h1 className="passage-title">{data.title}</h1>
-          <div className="passage-rule" />
-          <Passage
-            text={data.passage}
-            highlights={highlights}
-            onSelect={handleSelect}
+        {/* Popup */}
+        {selection && (
+          <SelectionPopup
+            selection={selection}
+            isHighlighted={isHighlighted}
+            onHighlight={handleHighlight}
+            onClear={handleClear}
+            onDismiss={dismiss}
           />
-        </article>
-
-        {/* Vocabulary Section */}
-        {data.vocabulary && (
-          <VocabularySection vocabulary={data.vocabulary} />
         )}
-      </main>
 
-      {/* Popup */}
-      {selection && (
-        <SelectionPopup
-          selection={selection}
-          isHighlighted={isHighlighted}
-          onHighlight={handleHighlight}
-          onClear={handleClear}
-          onDismiss={dismiss}
-        />
-      )}
-
-      <style>{`
+        <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap');
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -570,6 +632,7 @@ export default function ReadingDetail() {
         .highlight-btn { background: #FEF08A; color: #713F12; }
         .clear-btn     { background: #FEE2E2; color: #991B1B; }
       `}</style>
-    </div>
+      </div>
+    </UserRoute>
   );
 }
