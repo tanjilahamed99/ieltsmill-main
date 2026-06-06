@@ -12,25 +12,29 @@ const UserSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
   resetPasswordOTP: String,
   resetPasswordExpires: Date,
+  activeSessionId: {
+    type: String,
+    default: null,
+  },
 });
 
 // ✅ FIXED: Don't use next parameter with async/await
-UserSchema.pre("save", async function() {
+UserSchema.pre("save", async function () {
   // Only hash if password is modified
   if (!this.isModified("password")) {
     return;
   }
-  
+
   if (!this.password) {
     throw new Error("Password is required");
   }
-  
+
   const salt = await bcrypt.genSalt(12);
   this.password = await bcrypt.hash(this.password, salt);
 });
 
 // Compare password
-UserSchema.methods.comparePassword = async function(candidate) {
+UserSchema.methods.comparePassword = async function (candidate) {
   return bcrypt.compare(candidate, this.password);
 };
 

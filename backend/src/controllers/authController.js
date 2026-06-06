@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../modal/UserModal");
 const sendEmail = require("../utils/sendEmail");
+const { v4: uuidv4 } = require("uuid");
 
 // Generate JWT
 const generateToken = (id) => {
@@ -24,10 +25,13 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
+    const sessionId = uuidv4();
+
     const user = new User({
       email,
       password,
       name,
+      activeSessionId: sessionId,
     });
 
     await user.save();
@@ -36,7 +40,11 @@ exports.register = async (req, res) => {
 
     res.status(201).json({
       user: userWithoutPass,
-      token: generateToken({ id: user._id, email: user.email }),
+      token: generateToken({
+        id: user._id,
+        email: user.email,
+        sessionId,
+      }),
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -47,25 +55,49 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    
+
     const user = await User.findOne({ email })
       .populate([{ path: "picture", strictPopulate: false }])
       .populate([{ path: "endpoint", strictPopulate: false }]);
-    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Invalid credentials",
+      });
+    }
 
     const isMatch = await user.comparePassword(password);
-    if (!isMatch)
-      return res.status(400).json({ message: "Invalid credentials" });
+
+    if (!isMatch) {
+      return res.status(400).json({
+        message: "Invalid credentials",
+      });
+    }
+
+    // CREATE UNIQUE SESSION ID
+    const sessionId = uuidv4();
+
+    // SAVE IT TO DATABASE
+    user.activeSessionId = sessionId;
+
+    await user.save();
 
     // remove password from output
     const { password: _, ...userWithoutPass } = user.toObject();
 
     res.json({
       user: userWithoutPass,
-      token: generateToken({ id: user._id, email: user.email }),
+
+      token: generateToken({
+        id: user._id,
+        email: user.email,
+        sessionId,
+      }),
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({
+      message: err.message,
+    });
   }
 };
 
