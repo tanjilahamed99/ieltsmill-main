@@ -21,7 +21,11 @@ const {
   createSelfReadingTest,
   updateSelfReadingTest,
   deleteSelfReadingTest,
+  updateUserStatus,
+  getAllUsers,
+  deleteUser,
 } = require("../controllers/adminController");
+const { adminOnly } = require("../middleware/AdminMiddlewere");
 
 router.get("/tests/:type", getTestsByType);
 router.get("/test/:type/:id", getTestById);
@@ -47,9 +51,13 @@ router.post(
 );
 
 // self practice
+router.post("/selfPractice/:type", adminOnly, createSelfReadingTest);
+router.put("/selfPractice/:type/:id", adminOnly, updateSelfReadingTest);
+router.delete("/selfPractice/:type/:id", adminOnly, deleteSelfReadingTest);
 
-router.post("/selfPractice/:type", createSelfReadingTest);
-router.put("/selfPractice/:type/:id", updateSelfReadingTest);
-router.delete("/selfPractice/:type/:id", deleteSelfReadingTest);
+// use approved for access all pages
+router.put("/users/:id/:status", adminOnly, updateUserStatus);
+router.delete("/user/:id", adminOnly, deleteUser);
+router.get("/users", adminOnly, getAllUsers);
 
 module.exports = router;

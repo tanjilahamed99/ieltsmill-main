@@ -9,6 +9,7 @@ const { uploadImage, uploadAudio } = require("../config/cloudinary");
 const FullTestModal = require("../modal/FullTestModal");
 const { ReadingSelfPractice } = require("../modal/ReadingSelfPractice");
 const { WritingPractice } = require("../modal/WritingSelfPractice");
+const UserModal = require("../modal/UserModal");
 
 const TEST_MODELS = {
   listening: ListeningTest,
@@ -592,6 +593,98 @@ exports.deleteSelfReadingTest = async (req, res) => {
     res.json({
       success: true,
       message: "Reading test deleted successfully",
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await UserModal.find().select("-password").lean();
+
+    res.json({
+      success: true,
+      message: "Users Data",
+      users,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.updateUserStatus = async (req, res) => {
+  try {
+    const { id, status } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid test ID format",
+      });
+    }
+
+    const findUser = await UserModal.findById(id);
+
+    if (!findUser) {
+      return res.status(301).send({
+        success: false,
+        message: "user not found",
+      });
+    }
+
+    const mainStatus = ["pending", "approved", "rejected"];
+
+    if (!mainStatus.includes(status)) {
+      return res.status(401).send({
+        success: false,
+        message: "invalid data",
+      });
+    }
+
+    const update = {
+      $set: {
+        status: status,
+      },
+    };
+
+    const user = await UserModal.findOneAndUpdate({ _id: id }, update);
+
+    res.json({
+      success: true,
+      message: "User Data updated",
+      user,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid test ID format",
+      });
+    }
+
+    const findUser = await UserModal.findById(id);
+
+    if (!findUser) {
+      return res.status(301).send({
+        success: false,
+        message: "user not found",
+      });
+    }
+
+    const user = await UserModal.findByIdAndDelete(id);
+
+    res.json({
+      success: true,
+      message: "User deleted successfully",
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

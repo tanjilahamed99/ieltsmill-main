@@ -49,3 +49,13 @@ export const adminSelfPracticeUpdate = ({ data, type, id }) => {
 export const adminSelfPracticeDelete = ({ id, type }) => {
   return API.delete(`/admin/selfPractice/${type}/${id}`);
 };
+
+export const adminGetAllUserData = () => {
+  return API.get(`/admin/users`);
+};
+export const adminUpdateUserStatus = (id, status) => {
+  return API.put(`/admin/users/${id}/${status}`);
+};
+export const adminDeleteUser = (id) => {
+  return API.delete(`/admin/user/${id}`);
+};

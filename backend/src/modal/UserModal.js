@@ -16,6 +16,11 @@ const UserSchema = new Schema({
     type: String,
     default: null,
   },
+  status: {
+    type: String,
+    default: "pending",
+    enum: ["pending", "approved", "reject"],
+  },
 });
 
 // ✅ FIXED: Don't use next parameter with async/await
