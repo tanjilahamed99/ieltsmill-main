@@ -1096,7 +1096,7 @@ export default function ListeningTestCreator({ initial, onSaved }) {
           <div className="p-6 grid sm:grid-cols-2 gap-5">
             <div>
               <Label required>Series ID</Label>
-              <Input value={form.seriesId} onChange={(v) => setForm({ ...form, seriesId: v })} placeholder="e.g. IELTSMILL-series-13" />
+              <Input value={form.seriesId} onChange={(v) => setForm({ ...form, seriesId: v })} placeholder="e.g. IELTS-MILL-series-13" />
             </div>
             <div>
               <Label required>Test Number</Label>

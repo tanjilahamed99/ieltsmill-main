@@ -48,7 +48,7 @@ const Testimonial = () => {
           Voice From The World
         </h2>
         <p className="text-gray-500 text-sm max-w-md mx-auto">
-          What our users say after using IELTSMILL and how it helped them improve
+          What our users say after using IELTS-MILL and how it helped them improve
           their preparation
         </p>
       </div>

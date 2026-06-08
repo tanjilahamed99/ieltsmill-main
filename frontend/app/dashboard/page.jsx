@@ -803,7 +803,7 @@ export default function DashboardPage() {
                 I
               </div>
               <span className="font-black text-slate-900 text-base tracking-tight">
-                IELTSMILL
+                IELTS-MILL
               </span>
             </Link>
 

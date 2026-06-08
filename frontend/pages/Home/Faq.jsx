@@ -23,7 +23,7 @@ const FAQItem = ({
       {open && (
         <div className="px-5 pb-5 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-4">
           {a ||
-            "The best way to prepare for the IELTS exam online is by using reliable platforms like IELTSMILL that offer mock tests, practice materials, expert feedback, and band score analysis to simulate the real test experience."}
+            "The best way to prepare for the IELTS exam online is by using reliable platforms like IELTS-MILL that offer mock tests, practice materials, expert feedback, and band score analysis to simulate the real test experience."}
         </div>
       )}
     </div>
@@ -36,15 +36,15 @@ const Faq = () => {
       q: "What is the best way to prepare for the IELTS exam online?",
       open: true,
     },
-    { q: "Are IELTSMILL mock tests similar to the real IELTS exam?" },
-    { q: "Can I improve my IELTS band score by practicing on IELTSMILL?" },
-    { q: "Does IELTSMILL provide IELTS speaking and writing feedback?" },
-    { q: "Is IELTSMILL suitable for both IELTS Academic and General Training?" },
+    { q: "Are IELTS-MILL mock tests similar to the real IELTS exam?" },
+    { q: "Can I improve my IELTS band score by practicing on IELTS-MILL?" },
+    { q: "Does IELTS-MILL provide IELTS speaking and writing feedback?" },
+    { q: "Is IELTS-MILL suitable for both IELTS Academic and General Training?" },
     { q: "How can I access free IELTS Practice Questions?" },
-    { q: "Can I use IELTSMILL on mobile or tablet?" },
-    { q: "How accurate is the band score on IELTSMILL?" },
-    { q: "What is the price of IELTS mock tests on IELTSMILL?" },
-    { q: "Do I need to download any app to use IELTSMILL?" },
+    { q: "Can I use IELTS-MILL on mobile or tablet?" },
+    { q: "How accurate is the band score on IELTS-MILL?" },
+    { q: "What is the price of IELTS mock tests on IELTS-MILL?" },
+    { q: "Do I need to download any app to use IELTS-MILL?" },
   ];
   return (
     <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-14">

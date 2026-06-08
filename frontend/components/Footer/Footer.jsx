@@ -165,9 +165,9 @@ const Footer = () => {
                   <p>
                     Email:{" "}
                     <a
-                      href="mailto:support@IELTSMILL.com"
+                      href="mailto:support@IELTS-MILL.com"
                       className="hover:text-white transition-colors">
-                      support@IELTSMILL.com
+                      support@IELTS-MILL.com
                     </a>
                   </p>
                   <p>
@@ -202,7 +202,7 @@ const Footer = () => {
             </div>
             <p className="text-xs text-slate-500">
               Copyright © 2026{" "}
-              <span className="text-white font-semibold">IELTSMILL.</span> All
+              <span className="text-white font-semibold">IELTS-MILL.</span> All
               rights reserved.
             </p>
           </div>

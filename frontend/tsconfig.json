@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -22,6 +18,9 @@
         "name": "next"
       }
     ],
+    "paths": {
+      "@/*": ["./*"]
+    },
     "strictNullChecks": true
   },
   "include": [
@@ -80,9 +79,10 @@
     "pages/Home/Testimonial.jsx",
     "Providers/AdminPrivateRoute.jsx",
     "Providers/PrivateRoute.jsx",
-    "Providers/Provider.jsx"
-, "action/student.js", "action/auth.js", "action/admin.js"  ],
-  "exclude": [
-    "node_modules"
-  ]
+    "Providers/Provider.jsx",
+    "action/student.js",
+    "action/auth.js",
+    "action/admin.js"
+  ],
+  "exclude": ["node_modules"]
 }

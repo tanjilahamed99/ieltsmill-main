@@ -62,10 +62,18 @@ const Navbar = () => {
       drop: true,
       dropdownItems: selfPracticeDropdown,
     },
+    {
+      label: "Resources",
+      href: "/resources",
+      drop: false, // This is false, but it's still triggering dropdown logic
+    },
   ];
 
-  const handleDropdownEnter = (label) => {
-    setActiveDropdown(label);
+  const handleDropdownEnter = (label, hasDropdown) => {
+    // Only set active dropdown if the item actually has a dropdown
+    if (hasDropdown) {
+      setActiveDropdown(label);
+    }
   };
 
   const handleDropdownLeave = () => {
@@ -94,11 +102,9 @@ const Navbar = () => {
             <span className="font-black text-gray-900 text-xl tracking-tight leading-tight">
               IELTS
               <span className="text-transparent bg-clip-text bg-linear-to-r from-red-500 to-orange-500">
-                MILL
+                -MILL
               </span>
             </span>
-            {/* Optional: Small tagline */}
-            {/* <span className="text-[8px] text-gray-400 tracking-wider -mt-0.5">IELTS PREPARATION</span> */}
           </div>
         </Link>
 
@@ -108,13 +114,12 @@ const Navbar = () => {
             <div
               key={link.label}
               className="relative"
-              onMouseEnter={() => link.drop && handleDropdownEnter(link.label)}
+              onMouseEnter={() => handleDropdownEnter(link.label, link.drop)}
               onMouseLeave={handleDropdownLeave}>
-              <Link
-                href="#"
-                className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 font-medium whitespace-nowrap transition-colors">
-                {link.label}
-                {link.drop && (
+              {link.drop ? (
+                // If it has dropdown, render span to trigger dropdown
+                <div className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 font-medium whitespace-nowrap transition-colors cursor-pointer">
+                  {link.label}
                   <svg
                     className={`w-3 h-3 text-gray-400 transition-transform duration-200 ${
                       activeDropdown === link.label ? "rotate-180" : ""
@@ -129,14 +134,21 @@ const Navbar = () => {
                       d="M19 9l-7 7-7-7"
                     />
                   </svg>
-                )}
-              </Link>
+                </div>
+              ) : (
+                // If no dropdown, render Link directly
+                <Link
+                  href={link.href}
+                  className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 font-medium whitespace-nowrap transition-colors">
+                  {link.label}
+                </Link>
+              )}
 
-              {/* Dropdown Menu */}
-              {link.drop && activeDropdown === link.label && (
+              {/* Dropdown Menu - Only show if it has dropdown items */}
+              {link.drop && link.dropdownItems && activeDropdown === link.label && (
                 <div className="absolute top-full left-0 mt-0 w-64 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden animate-fadeIn">
                   <div className="py-2">
-                    {link.dropdownItems?.map((item, index) => (
+                    {link.dropdownItems.map((item, index) => (
                       <Link
                         key={index}
                         href={item.href}
@@ -243,33 +255,46 @@ const Navbar = () => {
           {navLinks.map((link) => (
             <div key={link.label} className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-900">
-                  {link.label}
-                </span>
-                <svg
-                  className="w-4 h-4 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
-              <div className="pl-4 space-y-2 border-l-2 border-gray-100">
-                {link.dropdownItems?.map((item, index) => (
+                {link.drop ? (
+                  <span className="text-sm font-medium text-gray-900">
+                    {link.label}
+                  </span>
+                ) : (
                   <Link
-                    key={index}
-                    href={item.href}
-                    className="block text-sm text-gray-600 py-1 hover:text-primary transition-colors"
+                    href={link.href}
+                    className="text-sm font-medium text-gray-900"
                     onClick={() => setMobileOpen(false)}>
-                    {item.label}
+                    {link.label}
                   </Link>
-                ))}
+                )}
+                {link.drop && (
+                  <svg
+                    className="w-4 h-4 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                )}
               </div>
+              {link.drop && link.dropdownItems && (
+                <div className="pl-4 space-y-2 border-l-2 border-gray-100">
+                  {link.dropdownItems.map((item, index) => (
+                    <Link
+                      key={index}
+                      href={item.href}
+                      className="block text-sm text-gray-600 py-1 hover:text-primary transition-colors"
+                      onClick={() => setMobileOpen(false)}>
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
 

@@ -203,7 +203,7 @@ export default function WritingTestCreator({
               <Input
                 value={form.seriesId}
                 onChange={(v) => setForm({ ...form, seriesId: v })}
-                placeholder="e.g. IELTSMILL-series-13"
+                placeholder="e.g. IELTS-MILL-series-13"
               />
             </div>
             <div>

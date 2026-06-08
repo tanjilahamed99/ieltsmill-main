@@ -178,7 +178,7 @@ export default function FullTestCreator({ initial, onSaved }) {
             <Input
               value={form.seriesId}
               onChange={(v) => setForm({ ...form, seriesId: v })}
-              placeholder="e.g. IELTSmill-series-13"
+              placeholder="e.g. IELTS-MILL-series-13"
               disabled={isEditMode}
             />
             <p className="text-[10px] text-slate-400 mt-1">

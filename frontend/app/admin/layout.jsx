@@ -87,7 +87,7 @@ export default function AdminLayout({ children }) {
 
         {(isMobile || !collapsed) && (
           <div className="overflow-hidden">
-            <p className="font-black text-white text-sm leading-tight tracking-tight">IELTSMILL</p>
+            <p className="font-black text-white text-sm leading-tight tracking-tight">IELTS-MILL</p>
             <p className="text-[10px] text-slate-400 font-medium tracking-widest uppercase">Admin</p>
           </div>
         )}
@@ -230,7 +230,7 @@ export default function AdminLayout({ children }) {
             style={{ background: "linear-gradient(135deg,#ef4444,#f97316)" }}>
             <span className="text-white font-black text-xs">I</span>
           </div>
-          <span className="font-black text-white text-sm tracking-tight">IELTSMILL</span>
+          <span className="font-black text-white text-sm tracking-tight">IELTS-MILL</span>
           <div className="ml-auto flex items-center gap-1.5">
             {(() => {
               const active = NAV.find(

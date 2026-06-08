@@ -76,7 +76,7 @@ const Hero = () => {
             </span>
           </h1>
           <p className="text-gray-500 text-base leading-relaxed mb-7 max-w-md">
-            IELTSMILL takes you for the real IELTS exam online and free. Take
+            IELTS-MILL takes you for the real IELTS exam online and free. Take
             100+ full IELTS exams which are computer-based, and practice all
             sections. Just real prep that works.
           </p>
