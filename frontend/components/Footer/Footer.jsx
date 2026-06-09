@@ -58,7 +58,7 @@ const Footer = () => {
                 alt="ILTS MILL Logo"
                 width={500}
                 height={36}
-                className="w-40 h-10"
+                className="w-40 h-14"
                 priority
               />
             </a>
