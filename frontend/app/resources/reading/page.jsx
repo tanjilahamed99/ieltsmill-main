@@ -430,7 +430,7 @@ export default function ReadingResources() {
   }
 
   return (
-    <UserRoute>
+    // <UserRoute>
       <div className="min-h-screen bg-surface font-sans">
         {/* ── Top bar ── */}
         <div className="sticky top-0 z-30 bg-white border-b border-[#e5e7eb] px-4 sm:px-6 py-3 flex items-center gap-3">
@@ -590,6 +590,6 @@ export default function ReadingResources() {
           </main>
         </div>
       </div>
-    </UserRoute>
+    //// </UserRoute>
   );
 }

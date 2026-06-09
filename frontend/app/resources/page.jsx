@@ -143,30 +143,30 @@ const resourceCategories = [
     lightBg: "bg-orange-50",
     lightText: "text-orange-600",
   },
-  {
-    slug: "tips-strategies",
-    title: "Tips & Strategies",
-    description:
-      "Examiner-backed tactics for every question type, time-management frameworks, and band-boosting checklists.",
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={1.6}
-        className="w-7 h-7">
-        <path
-          d="M9.663 17h4.673M12 3v1M6.072 6.072l-.707.707M3 12H2M6.072 17.928l-.707-.707M21 12h-1M17.928 6.072l.707.707M17 12a5 5 0 1 1-10 0 5 5 0 0 1 10 0Z"
-          strokeLinecap="round"
-        />
-      </svg>
-    ),
-    count: 40,
-    unit: "guides",
-    color: "from-orange-400 to-red-500",
-    lightBg: "bg-amber-50",
-    lightText: "text-amber-700",
-  },
+  // {
+  //   slug: "tips-strategies",
+  //   title: "Tips & Strategies",
+  //   description:
+  //     "Examiner-backed tactics for every question type, time-management frameworks, and band-boosting checklists.",
+  //   icon: (
+  //     <svg
+  //       viewBox="0 0 24 24"
+  //       fill="none"
+  //       stroke="currentColor"
+  //       strokeWidth={1.6}
+  //       className="w-7 h-7">
+  //       <path
+  //         d="M9.663 17h4.673M12 3v1M6.072 6.072l-.707.707M3 12H2M6.072 17.928l-.707-.707M21 12h-1M17.928 6.072l.707.707M17 12a5 5 0 1 1-10 0 5 5 0 0 1 10 0Z"
+  //         strokeLinecap="round"
+  //       />
+  //     </svg>
+  //   ),
+  //   count: 40,
+  //   unit: "guides",
+  //   color: "from-orange-400 to-red-500",
+  //   lightBg: "bg-amber-50",
+  //   lightText: "text-amber-700",
+  // },
 ];
 
 const stats = [
