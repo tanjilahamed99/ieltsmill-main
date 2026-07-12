@@ -310,12 +310,8 @@ export default function ReadingDetail() {
 
   if (loading) {
     return (
-      <div className="rd-root">
-        <Navbar />
-        <div className="rd-loading">
-          <div className="rd-spinner" />
-          <p>Loading passage…</p>
-        </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500"></div>
       </div>
     );
   }

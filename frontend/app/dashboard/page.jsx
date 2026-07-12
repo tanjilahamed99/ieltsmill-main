@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "../../features/Store";
 import { logout } from "../../features/slice/auth/authSlice";
-import PrivateRoute, { UserRoute } from "../../Providers/PrivateRoute";
+import { UserRoute } from "../../Providers/PrivateRoute";
 import Link from "next/link";
 import { 
   selectStats, 

@@ -13,59 +13,18 @@ const Navbar = () => {
   const user = useAppSelector((state) => state.auth.user);
   const dispatch = useAppDispatch();
 
-  // Dropdown content for Mock Test
-  const mockTestDropdown = [
-    {
-      label: "Full Test",
-      href: "/ilts-test",
-      description: "Real like exam with 4 sections",
-    },
-    {
-      label: "Listening Test",
-      href: "/ilts-test?type=listening",
-      description: "Train your listening skills",
-    },
-    {
-      label: "Reading Test",
-      href: "/ilts-test?type=reading",
-      description: "Improve your reading skills",
-    },
-    {
-      label: "Writing Test",
-      href: "/ilts-test?type=writing",
-      description: "Enhance your writing abilities",
-    },
-    {
-      label: "Speaking Test",
-      href: "/ilts-test?type=speaking",
-      description: "Practice speaking tasks",
-    },
-  ];
-
-  // Dropdown content for Self Practice
-  const selfPracticeDropdown = [
-    {
-      label: "Reading Practice",
-      href: "/self-practice",
-      description: "Expand your reading",
-    },
-  ];
-
   const navLinks = [
     {
       label: "Mock Test",
-      drop: true,
-      dropdownItems: mockTestDropdown,
+      href: "/full-test",
     },
     {
       label: "Self Practice",
-      drop: true,
-      dropdownItems: selfPracticeDropdown,
+      href: "/self-practice",
     },
     {
       label: "Resources",
       href: "/resources",
-      drop: false, // This is false, but it's still triggering dropdown logic
     },
   ];
 
@@ -145,44 +104,46 @@ const Navbar = () => {
               )}
 
               {/* Dropdown Menu - Only show if it has dropdown items */}
-              {link.drop && link.dropdownItems && activeDropdown === link.label && (
-                <div className="absolute top-full left-0 mt-0 w-64 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden animate-fadeIn">
-                  <div className="py-2">
-                    {link.dropdownItems.map((item, index) => (
+              {link.drop &&
+                link.dropdownItems &&
+                activeDropdown === link.label && (
+                  <div className="absolute top-full left-0 mt-0 w-64 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden animate-fadeIn">
+                    <div className="py-2">
+                      {link.dropdownItems.map((item, index) => (
+                        <Link
+                          key={index}
+                          href={item.href}
+                          className="block px-4 py-3 hover:bg-gray-50 transition-colors group">
+                          <div className="font-medium text-gray-900 text-sm group-hover:text-primary transition-colors">
+                            {item.label}
+                          </div>
+                          <div className="text-xs text-gray-500 mt-0.5">
+                            {item.description}
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                    <div className="border-t border-gray-100 p-3 bg-gray-50">
                       <Link
-                        key={index}
-                        href={item.href}
-                        className="block px-4 py-3 hover:bg-gray-50 transition-colors group">
-                        <div className="font-medium text-gray-900 text-sm group-hover:text-primary transition-colors">
-                          {item.label}
-                        </div>
-                        <div className="text-xs text-gray-500 mt-0.5">
-                          {item.description}
-                        </div>
+                        href={`${link.label === "Mock Test" ? "/mock-test" : "/self-practice"}`}
+                        className="flex items-center justify-between text-sm text-primary hover:text-secondary font-medium">
+                        View All {link.label}s
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24">
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
                       </Link>
-                    ))}
+                    </div>
                   </div>
-                  <div className="border-t border-gray-100 p-3 bg-gray-50">
-                    <Link
-                      href={`${link.label === "Mock Test" ? "/mock-test" : "/self-practice"}`}
-                      className="flex items-center justify-between text-sm text-primary hover:text-secondary font-medium">
-                      View All {link.label}s
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
-                    </Link>
-                  </div>
-                </div>
-              )}
+                )}
             </div>
           ))}
 
