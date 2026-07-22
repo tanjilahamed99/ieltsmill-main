@@ -72,7 +72,7 @@ const Hero = () => {
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}>
-              Practice Online & Paid
+              Practice Online & Free
             </span>
           </h1>
           <p className="text-gray-500 text-base leading-relaxed mb-7 max-w-md">
