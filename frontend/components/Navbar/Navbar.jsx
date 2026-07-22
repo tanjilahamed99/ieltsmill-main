@@ -289,7 +289,7 @@ const Navbar = () => {
                   Login
                 </Link>
                 <Link
-                  href="/register"
+                  href="/login"
                   className="flex-1 text-center text-white text-sm font-bold px-5 py-2.5 bg-linear-to-r from-red-500 to-orange-500 rounded-full shadow-md"
                   onClick={() => setMobileOpen(false)}>
                   Sign Up
