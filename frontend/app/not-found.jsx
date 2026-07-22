@@ -35,7 +35,7 @@ export default function NotFound() {
             linear-gradient(rgba(200,150,62,0.07) 1px, transparent 1px),
             linear-gradient(90deg, rgba(200,150,62,0.07) 1px, transparent 1px)
           `,
-          backgroundSize: "52px 52px",
+          backgroundSize: "clamp(32px, 6vw, 52px) clamp(32px, 6vw, 52px)",
           pointerEvents: "none",
         }}
       />
@@ -48,8 +48,8 @@ export default function NotFound() {
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: "700px",
-          height: "700px",
+          width: "min(700px, 130vw)",
+          height: "min(700px, 130vw)",
           background:
             "radial-gradient(circle, rgba(200,150,62,0.09) 0%, transparent 70%)",
           pointerEvents: "none",
@@ -65,7 +65,7 @@ export default function NotFound() {
           left: "50%",
           transform: "translate(-50%, -50%)",
           fontFamily: "var(--font-display)",
-          fontSize: "clamp(160px, 28vw, 320px)",
+          fontSize: "clamp(110px, 28vw, 320px)",
           color: "transparent",
           WebkitTextStroke: "1px rgba(200,150,62,0.12)",
           letterSpacing: "-0.04em",
@@ -83,8 +83,8 @@ export default function NotFound() {
         className="anim-up"
         style={{
           position: "absolute",
-          top: 28,
-          left: 32,
+          top: "clamp(16px, 4vw, 28px)",
+          left: "clamp(16px, 4vw, 32px)",
           zIndex: 10,
           display: "flex",
           alignItems: "center",
@@ -95,6 +95,7 @@ export default function NotFound() {
           style={{
             width: 36,
             height: 36,
+            flexShrink: 0,
             background: "var(--color-ink)",
             borderRadius: 8,
             display: "flex",
@@ -114,8 +115,9 @@ export default function NotFound() {
         <span
           style={{
             fontFamily: "var(--font-display)",
-            fontSize: 18,
+            fontSize: "clamp(15px, 3vw, 18px)",
             color: "var(--color-ink)",
+            whiteSpace: "nowrap",
           }}>
           IELTS<span style={{ color: "var(--color-gold)" }}>MILL</span>
         </span>
@@ -131,11 +133,15 @@ export default function NotFound() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          padding: "2rem",
+          padding: "clamp(1.25rem, 6vw, 2rem)",
+          paddingTop: "clamp(5rem, 14vw, 2rem)",
+          boxSizing: "border-box",
         }}>
 
         {/* Badge */}
-        <div className="label-tag anim-up delay-1">
+        <div
+          className="label-tag anim-up delay-1"
+          style={{ fontSize: "clamp(11px, 2.5vw, 13px)" }}>
           <span
             style={{
               width: 6,
@@ -143,6 +149,7 @@ export default function NotFound() {
               borderRadius: "50%",
               background: "var(--color-gold)",
               display: "inline-block",
+              flexShrink: 0,
             }}
           />
           Error 404
@@ -155,12 +162,12 @@ export default function NotFound() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 14,
+            gap: "clamp(8px, 2vw, 14px)",
             marginBottom: 20,
           }}>
           <div
             style={{
-              width: 56,
+              width: "clamp(32px, 8vw, 56px)",
               height: 1,
               background: "linear-gradient(90deg, transparent, #c8963e)",
             }}
@@ -171,11 +178,12 @@ export default function NotFound() {
               height: 7,
               borderRadius: "50%",
               background: "var(--color-gold)",
+              flexShrink: 0,
             }}
           />
           <div
             style={{
-              width: 56,
+              width: "clamp(32px, 8vw, 56px)",
               height: 1,
               background: "linear-gradient(90deg, #c8963e, transparent)",
             }}
@@ -186,12 +194,13 @@ export default function NotFound() {
         <h1
           className="font-display anim-up delay-2"
           style={{
-            fontSize: "clamp(38px, 6vw, 62px)",
+            fontSize: "clamp(30px, 8vw, 62px)",
             fontWeight: 400,
             lineHeight: 1.1,
             textAlign: "center",
             marginBottom: 18,
             color: "var(--color-ink)",
+            maxWidth: "90vw",
           }}>
           This path leads{" "}
           <em style={{ fontStyle: "italic", color: "var(--color-gold)" }}>
@@ -210,13 +219,14 @@ export default function NotFound() {
           className="anim-up delay-3"
           style={{
             fontFamily: "var(--font-sans)",
-            fontSize: 15,
+            fontSize: "clamp(13px, 3.2vw, 15px)",
             fontWeight: 400,
             color: "#5a6478",
             lineHeight: 1.75,
-            maxWidth: 380,
+            maxWidth: "min(380px, 90vw)",
             textAlign: "center",
-            marginBottom: 40,
+            marginBottom: "clamp(28px, 6vw, 40px)",
+            padding: "0 4px",
           }}>
           The page you&apos;re looking for doesn&apos;t exist or may have been moved.
           Head back and pick up where you left off.
@@ -230,6 +240,8 @@ export default function NotFound() {
             gap: 12,
             flexWrap: "wrap",
             justifyContent: "center",
+            width: "100%",
+            maxWidth: 360,
           }}>
           <button className="btn-gold" onClick={handleBack}>
             <svg
@@ -271,11 +283,12 @@ export default function NotFound() {
           className="anim-up delay-5"
           aria-label="Quick navigation"
           style={{
-            marginTop: 64,
+            marginTop: "clamp(40px, 10vw, 64px)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             gap: 14,
+            width: "100%",
           }}>
           <div
             style={{
@@ -302,6 +315,9 @@ export default function NotFound() {
               gap: 6,
               flexWrap: "wrap",
               justifyContent: "center",
+              width: "100%",
+              padding: "0 12px",
+              boxSizing: "border-box",
             }}>
             {[
               { label: "Dashboard", href: "/dashboard" }
@@ -345,6 +361,12 @@ export default function NotFound() {
           background: rgba(8,16,30,0.05) !important;
           border-color: var(--color-gold) !important;
           color: var(--color-gold) !important;
+        }
+        @media (max-width: 480px) {
+          .btn-gold, .btn-ghost {
+            flex: 1 1 auto;
+            justify-content: center;
+          }
         }
       `}</style>
     </div>
