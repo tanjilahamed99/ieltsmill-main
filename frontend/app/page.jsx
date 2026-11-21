@@ -1,4 +1,3 @@
-// AFTER — only Hero loads immediately, rest are lazy
 import dynamic from "next/dynamic";
 import Navbar from "../components/Navbar/Navbar";
 import Hero from "../pages/Home/Hero";
