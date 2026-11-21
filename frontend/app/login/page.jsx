@@ -296,7 +296,7 @@ const AuthPage = () => {
                   </div>
                 )}
 
-                {/* Submit Button */}
+                {/* Submit Butto */}
                 <button
                   type="submit"
                   disabled={isLoading}
